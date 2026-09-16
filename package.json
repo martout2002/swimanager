@@ -1,0 +1,39 @@
+{
+  "name": "swimanager",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "typecheck": "tsc --noEmit",
+    "check": "bun scripts/check.ts",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "db:push": "bun scripts/push-schema.ts",
+    "db:seed": "bun scripts/seed.ts",
+    "db:reset": "bun run db:push && bun run db:seed"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "clsx": "^2.1.1",
+    "drizzle-kit": "^0.31.10",
+    "drizzle-orm": "^0.45.2",
+    "framer-motion": "^12.23.12",
+    "jose": "^6.1.0",
+    "next": "15.5.4",
+    "postgres": "^3.4.7",
+    "react": "19.1.1",
+    "react-dom": "19.1.1",
+    "zod": "^4.1.5"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
+    "typescript": "^5.9.2"
+  }
+}

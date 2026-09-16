@@ -1,0 +1,1895 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Swim school platform — mockup</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --navy:#0A3D5C;
+    --navy-ink:#082E45;
+    --blue:#1B7FA8;
+    --blue-pale:#EAF3F6;
+    --coral:#FF6B4A;
+    --coral-dark:#E24F2C;
+    --green:#1F9E82;
+    --green-pale:#E4F5F1;
+    --amber:#C97F12;
+    --amber-pale:#FBF0DD;
+    --red:#C24444;
+    --red-pale:#FBEBEB;
+    --ink:#122029;
+    --slate:#5C6E76;
+    --line:#DCE6EA;
+    --bg:#F1F6F7;
+    --white:#FFFFFF;
+    --font-display:'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+    --font-body:'Inter', ui-sans-serif, system-ui, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);}
+  button{font-family:inherit;}
+  button:focus-visible, input:focus-visible, [tabindex]:focus-visible{outline:2px solid var(--blue); outline-offset:2px;}
+  h1,h2,h3,h4{font-family:var(--font-display); margin:0; letter-spacing:-0.01em;}
+  p{margin:0;}
+
+  /* ---------- meta / prototype bar ---------- */
+  .meta-bar{
+    background:var(--navy-ink); color:#DCEBF2; padding:12px 18px;
+    display:flex; align-items:center; gap:14px; flex-wrap:wrap; font-size:13px;
+  }
+  .meta-bar .meta-label{color:#8FB4C6;}
+  .seg{display:inline-flex; background:rgba(255,255,255,.08); border-radius:9px; padding:3px; gap:2px;}
+  .seg button{border:0; background:transparent; color:#B9D2DE; padding:7px 14px; border-radius:6px; font-size:13px; font-weight:500; cursor:pointer;}
+  .seg button.active{background:#fff; color:var(--navy-ink); font-weight:600;}
+  .meta-note{margin-left:auto; color:#7FA3B6; font-size:12px; max-width:360px; text-align:right;}
+
+  .stage{padding:32px 16px 80px; display:flex; justify-content:center;}
+
+  /* ---------- lane divider motif ---------- */
+  .lane-divider{display:flex; gap:5px; margin:18px 0; align-items:center;}
+  .lane-divider span{flex:1; height:2px; background:repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 14px);}
+
+  /* ---------- phone frame (instructor + parent) ---------- */
+  .phone{width:100%; max-width:404px; background:#fff; border-radius:22px; box-shadow:0 16px 40px rgba(9,45,66,.14); border:1px solid var(--line); overflow:hidden;}
+  .phone-status{display:flex; justify-content:space-between; align-items:center; padding:9px 16px; font-size:12px; color:var(--slate); background:var(--blue-pale); border-bottom:1px solid var(--line);}
+  .sync-pill{display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); background:#fff; border-radius:99px; padding:4px 10px; font-size:11.5px; font-weight:600; cursor:pointer; color:var(--ink);}
+  .sync-dot{width:7px;height:7px;border-radius:50%; background:var(--green);}
+  .sync-pill.offline .sync-dot{background:var(--amber);}
+  .offline-banner{background:var(--amber-pale); color:#8A5A0B; font-size:12.5px; padding:9px 16px; border-bottom:1px solid var(--line);}
+  .phone-header{padding:18px 18px 14px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:10px;}
+  .back-btn{border:0; background:var(--blue-pale); color:var(--navy); width:34px; height:34px; border-radius:10px; display:grid; place-items:center; cursor:pointer; flex-shrink:0;}
+  .phone-header h2{font-size:19px; color:var(--navy);}
+  .phone-header .sub{font-size:12.5px; color:var(--slate); margin-top:2px;}
+  .phone-body{padding:16px 18px 22px;}
+
+  /* ---------- generic elements ---------- */
+  .kicker{font-size:12px; color:var(--slate); margin-bottom:4px;}
+  .card{background:#fff; border:1px solid var(--line); border-radius:14px; padding:16px;}
+  .card + .card{margin-top:10px;}
+  .btn{border:0; border-radius:10px; padding:12px 16px; font-size:14.5px; font-weight:600; cursor:pointer; min-height:48px;}
+  .btn-coral{background:var(--coral); color:#fff;}
+  .btn-coral:hover{background:var(--coral-dark);}
+  .btn-navy{background:var(--navy); color:#fff;}
+  .btn-outline{background:#fff; border:1.5px solid var(--line); color:var(--ink);}
+  .btn-block{width:100%; display:block;}
+  .btn-sm{padding:8px 12px; font-size:13px; min-height:38px; border-radius:8px;}
+  .pill{display:inline-flex; align-items:center; gap:5px; border-radius:99px; padding:4px 11px; font-size:12px; font-weight:600;}
+  .pill-green{background:var(--green-pale); color:var(--green);}
+  .pill-amber{background:var(--amber-pale); color:var(--amber);}
+  .pill-red{background:var(--red-pale); color:var(--red);}
+  .pill-slate{background:#EDF2F3; color:var(--slate);}
+
+  /* ---------- class list (instructor: today) ---------- */
+  .class-card{width:100%; text-align:left; background:#fff; border:1px solid var(--line); border-radius:14px; padding:14px 16px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; gap:10px;}
+  .class-card:hover{border-color:var(--blue);}
+  .class-card + .class-card{margin-top:10px;}
+  .class-time{font-family:var(--font-display); font-weight:600; color:var(--navy); font-size:16px;}
+  .class-meta{font-size:12.5px; color:var(--slate); margin-top:3px;}
+  .class-count{background:var(--blue-pale); color:var(--navy); font-size:12px; font-weight:700; border-radius:99px; width:30px; height:30px; display:grid; place-items:center; flex-shrink:0;}
+
+  /* ---------- roster / attendance ---------- */
+  .student-row{border:1px solid var(--line); border-radius:14px; padding:14px; margin-bottom:12px;}
+  .student-row .name-line{display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;}
+  .student-row .name{font-weight:700; font-size:15px;}
+  .student-row .level{font-size:12px; color:var(--slate);}
+  .status-grid{display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:10px;}
+  .status-btn{border:1.5px solid var(--line); background:#fff; border-radius:9px; padding:9px 4px; font-size:11.5px; font-weight:600; color:var(--slate); cursor:pointer; min-height:44px;}
+  .status-btn.on-present{background:var(--green-pale); border-color:var(--green); color:var(--green);}
+  .status-btn.on-absent_notified{background:var(--amber-pale); border-color:var(--amber); color:var(--amber);}
+  .status-btn.on-absent_no_show{background:var(--red-pale); border-color:var(--red); color:var(--red);}
+  .status-btn.on-cancelled_instructor, .status-btn.on-cancelled_weather{background:#EDF2F3; border-color:var(--slate); color:var(--slate);}
+  .status-btn.on-makeup{background:var(--blue-pale); border-color:var(--blue); color:var(--blue);}
+  .assess-link{width:100%; background:var(--blue-pale); color:var(--navy); border:0; border-radius:9px; padding:10px; font-size:13px; font-weight:600; cursor:pointer;}
+
+  /* ---------- progress ring ---------- */
+  .ring-wrap{position:relative; width:64px; height:64px; flex-shrink:0;}
+  .ring{width:64px; height:64px; border-radius:50%; background:conic-gradient(var(--ring-color, var(--green)) calc(var(--pct) * 3.6deg), #E7EEF0 0deg);}
+  .ring-hole{position:absolute; inset:6px; background:#fff; border-radius:50%; display:grid; place-items:center; font-family:var(--font-display); font-weight:700; font-size:15px; color:var(--ink);}
+
+  /* ---------- assessment screen ---------- */
+  .ready-banner{background:var(--green); color:#fff; border-radius:12px; padding:12px 14px; font-size:13.5px; font-weight:600; margin-bottom:14px; display:flex; align-items:center; gap:8px;}
+  .sequence{margin-bottom:18px;}
+  .sequence-title{font-size:13px; font-weight:700; text-transform:none; color:var(--navy); margin-bottom:8px; display:flex; justify-content:space-between; align-items:baseline;}
+  .sequence-title .pct{color:var(--slate); font-weight:600; font-size:12px;}
+  .criterion{border:1px solid var(--line); border-radius:12px; padding:11px 12px; margin-bottom:8px;}
+  .crit-top{display:flex; align-items:flex-start; gap:9px;}
+  .crit-check{width:22px;height:22px;border-radius:6px;border:2px solid var(--line); flex-shrink:0; display:grid; place-items:center; cursor:pointer; color:#fff; margin-top:1px;}
+  .crit-check.checked{background:var(--green); border-color:var(--green);}
+  .crit-text{font-size:13.5px; line-height:1.4; flex:1;}
+  .crit-lock{color:var(--slate); flex-shrink:0; margin-top:2px;}
+  .verify-tag{display:inline-block; margin-top:5px; font-size:10.5px; color:var(--amber); background:var(--amber-pale); border-radius:6px; padding:2px 7px; font-weight:600;}
+  .sub-block{margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);}
+  .sub-block-label{display:flex; align-items:center; gap:5px; font-size:11px; color:var(--blue); font-weight:700; margin-bottom:8px;}
+  .sub-row{display:flex; align-items:center; gap:9px; padding:5px 0;}
+  .sub-check{width:19px;height:19px;border-radius:5px;border:2px solid var(--line); flex-shrink:0; display:grid; place-items:center; cursor:pointer; color:#fff;}
+  .sub-check.checked{background:var(--blue); border-color:var(--blue);}
+  .sub-text{font-size:12.5px; flex:1;}
+  .sub-weight{font-size:10.5px; color:var(--slate); background:#EDF2F3; border-radius:5px; padding:1px 6px;}
+  .crit-pct-tag{font-size:11.5px; font-weight:700; color:var(--slate); margin-left:31px; margin-top:4px;}
+  .timed-row{display:flex; align-items:center; gap:8px; margin-top:8px; margin-left:31px;}
+  .timed-row input{width:70px; border:1.5px solid var(--line); border-radius:7px; padding:6px 8px; font-size:13px; font-family:inherit;}
+  .timed-row .threshold{font-size:11.5px; color:var(--slate);}
+
+  /* ---------- parent portal ---------- */
+  .child-tabs{display:flex; gap:8px; margin-bottom:16px;}
+  .child-tab{flex:1; border:1.5px solid var(--line); background:#fff; border-radius:11px; padding:10px; cursor:pointer; text-align:center;}
+  .child-tab.active{border-color:var(--navy); background:var(--blue-pale);}
+  .child-tab .cname{font-weight:700; font-size:13.5px;}
+  .child-tab .clevel{font-size:11px; color:var(--slate);}
+  .stage-summary{display:flex; align-items:center; gap:14px; margin-bottom:16px;}
+  .stage-summary .sname{font-family:var(--font-display); font-weight:700; font-size:17px; color:var(--navy);}
+  .stage-summary .scaption{font-size:12.5px; color:var(--slate); margin-top:2px;}
+  .lesson-note{font-size:13px; line-height:1.5;}
+  .lesson-note b{color:var(--navy);}
+  .invoice-line{display:flex; justify-content:space-between; font-size:13px; padding:6px 0; border-bottom:1px solid var(--line);}
+  .invoice-line:last-of-type{border-bottom:0;}
+  .invoice-total{display:flex; justify-content:space-between; font-weight:700; font-size:15.5px; padding-top:10px; margin-top:4px; border-top:2px solid var(--ink);}
+  .qr-box{text-align:center; padding:14px; background:var(--blue-pale); border-radius:12px; margin-top:12px;}
+  .qr-box canvas{border-radius:8px; background:#fff; padding:8px; box-shadow:0 2px 8px rgba(0,0,0,.06);}
+  .qr-ref{font-family:monospace; font-size:12px; color:var(--navy); margin-top:8px; letter-spacing:.02em;}
+  .qr-caption{font-size:11.5px; color:var(--slate); margin-top:6px;}
+
+  /* ---------- owner / admin dashboard ---------- */
+  .dashboard{width:100%; max-width:1100px; background:#fff; border-radius:18px; box-shadow:0 16px 40px rgba(9,45,66,.10); border:1px solid var(--line); overflow:hidden; display:flex; min-height:640px;}
+  .dash-nav{width:200px; background:var(--navy); flex-shrink:0; padding:22px 12px;}
+  .dash-nav .brand{color:#fff; font-family:var(--font-display); font-weight:700; font-size:16px; padding:0 10px 20px;}
+  .dash-nav button{display:block; width:100%; text-align:left; background:transparent; border:0; color:#B9D2DE; padding:11px 12px; border-radius:9px; font-size:14px; cursor:pointer; margin-bottom:3px;}
+  .dash-nav button.active{background:rgba(255,255,255,.14); color:#fff; font-weight:600;}
+  .dash-main{flex:1; padding:30px 32px; overflow-x:auto; min-width:0;}
+  .dash-main h1{font-size:22px; color:var(--navy); margin-bottom:4px;}
+  .dash-sub{color:var(--slate); font-size:13.5px; margin-bottom:22px;}
+  .kpi-row{display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:14px; margin-bottom:24px;}
+  .kpi{border-left:3px solid var(--kpi-color, var(--navy)); background:#fbfdfd; border-radius:0 10px 10px 0; padding:14px 16px;}
+  .kpi .num{font-family:var(--font-display); font-size:26px; font-weight:700; color:var(--ink);}
+  .kpi .lbl{font-size:12px; color:var(--slate); margin-top:2px;}
+  .callout{background:var(--green-pale); border-radius:12px; padding:16px 18px; margin-bottom:26px; font-size:13.5px; line-height:1.55; color:#155343;}
+  .callout b{color:var(--green);}
+  table{width:100%; border-collapse:collapse; font-size:13.5px;}
+  th{text-align:left; font-size:11.5px; text-transform:none; color:var(--slate); font-weight:600; padding:0 12px 10px; border-bottom:1.5px solid var(--line);}
+  td{padding:12px; border-bottom:1px solid var(--line); vertical-align:middle;}
+  tr:last-child td{border-bottom:0;}
+  .table-card{border:1px solid var(--line); border-radius:14px; overflow:hidden;}
+  .table-card table{margin:0;}
+  .table-card th, .table-card td{padding-left:16px;}
+  .section-header{display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;}
+  .section-header h3{font-size:15px; color:var(--navy);}
+  .curric-lock-row{display:flex; align-items:center; gap:9px; padding:10px 0; border-bottom:1px solid var(--line); font-size:13.5px;}
+  .curric-sub-row{display:flex; align-items:center; gap:9px; padding:7px 0 7px 30px; font-size:12.5px; color:var(--slate);}
+  .toast{position:fixed; bottom:22px; left:50%; transform:translateX(-50%); background:var(--ink); color:#fff; padding:11px 20px; border-radius:99px; font-size:13px; font-weight:500; opacity:0; pointer-events:none; transition:opacity .25s, transform .25s; z-index:50;}
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(-6px);}
+
+  /* ---------- AI coaching intelligence ---------- */
+  .ai-card{border-color:var(--blue); background:linear-gradient(180deg,#F5FAFC 0%, #fff 60%);}
+  .ai-meta{font-size:11px; color:var(--slate); margin-bottom:10px;}
+  .ai-label{display:block; font-size:11px; font-weight:700; color:var(--blue); margin:10px 0 4px; text-transform:none;}
+  .ai-text{width:100%; border:1.5px solid var(--line); border-radius:8px; padding:8px 10px; font-size:12.5px; font-family:inherit; line-height:1.5; resize:vertical; min-height:58px; color:var(--ink);}
+  .ai-badge{display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:700; color:var(--blue); background:var(--blue-pale); border-radius:6px; padding:2px 8px; margin-bottom:8px;}
+  .spinner{display:inline-block; width:13px; height:13px; border:2px solid var(--blue-pale); border-top-color:var(--blue); border-radius:50%; animation:spin .7s linear infinite; vertical-align:-2px; margin-right:6px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  /* ---------- lesson plan ---------- */
+  .lp-field{margin-bottom:10px;}
+  .lp-field b{display:block; font-size:11px; color:var(--navy); text-transform:none; margin-bottom:2px;}
+  .lp-field span, .lp-field div.lp-val{font-size:12.5px; color:var(--ink); line-height:1.5;}
+  .lp-steps{margin:2px 0 0; padding-left:18px; font-size:12.5px; line-height:1.6;}
+  .lp-raw{white-space:pre-wrap; font-size:12.5px; line-height:1.6; font-family:inherit;}
+
+  /* ---------- assessment check / promotion ---------- */
+  .check-panel{background:var(--blue-pale); border:1.5px solid var(--blue); border-radius:12px; padding:14px; margin-bottom:14px;}
+  .ready-banner{justify-content:space-between;}
+  .btn-on-green{background:#fff; color:var(--green); border:0;}
+
+  /* ---------- parent sub-tabs + roadmap ---------- */
+  .subtab-row{display:flex; gap:8px; margin-bottom:16px;}
+  .subtab{flex:1; border:1.5px solid var(--line); background:#fff; border-radius:10px; padding:9px; font-size:13px; font-weight:600; color:var(--slate); cursor:pointer; text-align:center;}
+  .subtab.active{background:var(--navy); border-color:var(--navy); color:#fff;}
+  .roadmap-row{display:flex; gap:12px; padding:10px 0; border-bottom:1px solid var(--line);}
+  .roadmap-row:last-child{border-bottom:0;}
+  .roadmap-dot{width:12px; height:12px; border-radius:50%; background:var(--line); margin-top:5px; flex-shrink:0;}
+  .roadmap-row.done .roadmap-dot{background:var(--green);}
+  .roadmap-row.current .roadmap-dot{background:var(--amber); box-shadow:0 0 0 4px var(--amber-pale);}
+  .roadmap-top{display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:4px;}
+  .roadmap-top strong{font-size:13.5px;}
+  .roadmap-blurb{font-size:12.5px; color:var(--slate); line-height:1.5;}
+
+  /* ---------- calendar ---------- */
+  .cal-nav{display:flex; justify-content:space-between; align-items:center;}
+  .cal-nav button{border:0; background:var(--blue-pale); color:var(--navy); width:32px; height:32px; border-radius:8px; cursor:pointer; display:grid; place-items:center;}
+  .cal-grid{display:grid; grid-template-columns:repeat(7,1fr); gap:4px;}
+  .cal-dow{text-align:center; font-size:10.5px; color:var(--slate); font-weight:700; padding-bottom:4px;}
+  .cal-cell{aspect-ratio:1; border-radius:9px; border:1.5px solid var(--line); display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:12.5px; cursor:pointer; background:#fff; gap:3px; min-height:40px;}
+  .cal-cell.empty{visibility:hidden; cursor:default; border:0;}
+  .cal-cell.today{border-color:var(--blue); border-width:2px; font-weight:700;}
+  .cal-cell.selected{background:var(--navy); border-color:var(--navy); color:#fff;}
+  .cal-cell .dot{width:5px; height:5px; border-radius:50%; background:var(--green);}
+  .cal-cell.selected .dot{background:#fff;}
+  .cal-cell.blocked{background:var(--red-pale); border-color:var(--red);}
+
+  /* ---------- make-up credits ---------- */
+  .credit-card{border:1px solid var(--line); border-radius:10px; padding:11px 12px; margin-bottom:8px;}
+  .credit-card:last-child{margin-bottom:0;}
+  .credit-row{display:flex; justify-content:space-between; align-items:center; font-size:12.5px; gap:8px;}
+  .slot-row{display:flex; flex-direction:column; align-items:flex-start; gap:2px; width:100%; text-align:left; border:1.5px solid var(--line); background:#fff; border-radius:8px; padding:9px 11px; margin-top:6px; cursor:pointer; font-size:12.5px;}
+  .slot-row:hover{border-color:var(--blue);}
+  .slot-meta{color:var(--slate); font-size:11px;}
+  .cap-input{width:64px; border:1.5px solid var(--line); border-radius:6px; padding:5px 7px; font-size:13px; font-family:inherit;}
+
+  /* ---------- weekly schedule grid (Outlook/When2Meet style) ---------- */
+  .week-grid-wrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .week-grid{display:grid; grid-template-columns:52px repeat(7, minmax(64px,1fr)); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:10px; overflow:hidden; min-width:560px;}
+  .wg-corner{background:#fff;}
+  .wg-daylabel{background:#fff; text-align:center; padding:7px 2px; font-size:11px; font-weight:700; color:var(--navy);}
+  .wg-daylabel .dnum{font-size:14px;}
+  .wg-hourlabel{background:#fff; text-align:right; padding:4px 8px; font-size:10px; color:var(--slate); white-space:nowrap;}
+  .grid-cell{background:#fff; min-height:38px; display:flex; flex-direction:column; align-items:center; justify-content:center; font-size:10px; text-align:center; line-height:1.3; padding:2px;}
+  .grid-cell.class-cell{background:var(--blue-pale); color:var(--navy); font-weight:700;}
+  .grid-cell.available-cell{background:var(--green-pale); color:var(--green); cursor:pointer; font-weight:700;}
+  .grid-cell.available-cell:hover{filter:brightness(0.96);}
+  .grid-cell.booked-cell{background:#FDE9E2; color:var(--coral-dark); font-weight:700;}
+  .grid-cell.empty-cell{cursor:pointer;}
+  .grid-cell.empty-cell:hover{background:#F2F6F7;}
+  .legend-dot{display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:5px; vertical-align:-1px;}
+
+  @media (max-width:760px){
+    .dashboard{flex-direction:column;}
+    .dash-nav{width:100%; display:flex; gap:4px; padding:14px; overflow-x:auto;}
+    .dash-nav .brand{display:none;}
+    .dash-nav button{white-space:nowrap; margin-bottom:0;}
+    .dash-main{padding:20px;}
+  }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================== DATA ============================== */
+
+const RATE = { kaihsu:70, kaiyang:40, oscar:40, anna:70, ella:45, oli:45 };
+const STUDENTS = {
+  kaihsu:{ name:'Kai Hsu', level:'Stage 1', parent:'Fiona', venue:"D'Leedon" },
+  kaiyang:{ name:'Kai Yang', level:'Stage 1', parent:'Fiona', venue:"D'Leedon" },
+  oscar:{ name:'Oscar', level:'Stage 1', parent:'Wang', venue:"D'Leedon" },
+  anna:{ name:'Anna', level:'Silver', parent:'Matija', venue:"D'Leedon" },
+  ella:{ name:'Ella Phua', level:'Foundation 1', parent:'Aileen', venue:'Amber Residences' },
+  oli:{ name:'Oli Phua', level:'Stage 1', parent:'Aileen', venue:'Amber Residences' },
+};
+
+const TODAY = '2026-08-29';
+
+// dayOfWeek: 0=Sun..6=Sat (matches JS Date#getDay). capacity + levels are what the
+// make-up finder checks against — a class only offers a make-up slot if the student's
+// level is served here AND there's room left once existing bookings are counted.
+const CLASSES = [
+  { id:'c1', dayOfWeek:6, startHour:9,     endHour:10,    time:'9:00 – 10:00 AM', venue:'Amber Residences', label:'Phua siblings', studentIds:['ella','oli'], capacity:3, levels:['Foundation 1','Foundation 2','Foundation 3','Foundation 4','Foundation 5','Stage 1'] },
+  { id:'c2', dayOfWeek:6, startHour:15.75, endHour:16.75, time:'3:45 – 4:45 PM', venue:"D'Leedon", label:'Kai Hsu & Kai Yang', studentIds:['kaihsu','kaiyang'], capacity:2, levels:['Stage 1','Stage 2'] },
+  { id:'c3', dayOfWeek:6, startHour:16.75, endHour:17.75, time:'4:45 – 5:45 PM', venue:"D'Leedon", label:'Oscar', studentIds:['oscar'], capacity:3, levels:['Stage 1','Stage 2'] },
+  { id:'c4', dayOfWeek:6, startHour:17.75, endHour:18.75, time:'5:45 – 6:45 PM', venue:"D'Leedon", label:'Anna', studentIds:['anna'], capacity:1, levels:['Silver','Gold'] },
+];
+const GRID_START_HOUR = 9, GRID_END_HOUR = 19; // the coach's schedule grid covers 9am–7pm
+
+// ---- date helpers (plain YYYY-MM-DD strings throughout) ----
+function pad2(n){ return String(n).padStart(2,'0'); }
+function ymd(y,m,d){ return y+'-'+pad2(m)+'-'+pad2(d); }
+function parseDate(s){ const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); }
+function dayOfWeekOf(dateStr){ return parseDate(dateStr).getDay(); }
+function addMonthsStr(dateStr, n){ const d = parseDate(dateStr); d.setMonth(d.getMonth()+n); return ymd(d.getFullYear(), d.getMonth()+1, d.getDate()); }
+function addDaysStr(dateStr, n){ const d = parseDate(dateStr); d.setDate(d.getDate()+n); return ymd(d.getFullYear(), d.getMonth()+1, d.getDate()); }
+function formatDateLabel(dateStr){ return parseDate(dateStr).toLocaleDateString('en-GB', { weekday:'short', day:'numeric', month:'short' }); }
+function monthLabel(y,m){ return new Date(y, m-1, 1).toLocaleDateString('en-GB', { month:'long', year:'numeric' }); }
+function classesOnDate(dateStr){ return CLASSES.filter(c => c.dayOfWeek === dayOfWeekOf(dateStr)); }
+function weekStartOf(dateStr){ return addDaysStr(dateStr, -dayOfWeekOf(dateStr)); } // Sunday on/before dateStr
+function formatWeekLabel(ws){
+  const a = parseDate(ws), b = parseDate(addDaysStr(ws,6));
+  const fmt = d => d.toLocaleDateString('en-GB',{ day:'numeric', month:'short' });
+  return fmt(a) + ' \u2013 ' + fmt(b) + ', ' + b.getFullYear();
+}
+function formatHourLabel(hour){
+  const h = hour % 24, ampm = h>=12 ? 'PM':'AM', h12 = h%12===0 ? 12 : h%12;
+  return h12 + ':00 ' + ampm;
+}
+function studentsForClassDate(classId, dateStr){
+  const cls = CLASSES.find(c => c.id === classId);
+  const regulars = cls.studentIds.map(id => ({ id, makeup:false }));
+  const guests = makeupBookings.filter(b => b.classId === classId && b.date === dateStr).map(b => ({ id:b.studentId, makeup:true }));
+  return regulars.concat(guests);
+}
+
+const BILLING_RULES = {
+  present:            { label:'Present',            chargeable:true,  credit:false },
+  absent_notified:    { label:'Notified',            chargeable:false, credit:true  },
+  absent_no_show:     { label:'No-show',             chargeable:true,  credit:false },
+  cancelled_instructor:{ label:'Cancelled (me)',      chargeable:false, credit:true  },
+  cancelled_weather:  { label:'Weather',             chargeable:false, credit:true  },
+  makeup:             { label:'Make-up',             chargeable:false, credit:false },
+};
+const STATUS_ORDER = ['present','absent_notified','absent_no_show','cancelled_instructor','cancelled_weather','makeup'];
+
+// ---- make-up credit ledger ----
+// Rules: at most one credit issued per student per calendar month; each credit expires
+// two months after the absence that earned it, if unused.
+let makeupCredits = [];   // {id, studentId, issuedDate, expiresDate, status:'available'|'used', usedClassId, usedDate}
+let makeupBookings = [];  // {creditId, studentId, classId, date}
+let instructorBlockedDates = []; // dates excluded from the make-up finder, e.g. instructor unavailable
+
+function issueMakeupCreditIfEligible(studentId, date){
+  if (makeupCredits.some(c => c.studentId===studentId && c.issuedDate===date)) return; // already recorded for this absence
+  const month = date.slice(0,7);
+  const alreadyThisMonth = makeupCredits.some(c => c.studentId===studentId && c.issuedDate.slice(0,7)===month);
+  if (alreadyThisMonth) return; // cap: one credit per student per month
+  makeupCredits.push({ id:'mc-'+studentId+'-'+date, studentId, issuedDate:date, expiresDate:addMonthsStr(date,2), status:'available' });
+}
+function computeCreditStatus(c){
+  if (c.status === 'used') return 'used';
+  if (TODAY > c.expiresDate) return 'expired';
+  return 'available';
+}
+function eligibleMakeupSlots(studentId, credit){
+  const level = STUDENTS[studentId].level;
+  const results = [];
+  const horizon = credit.expiresDate < addDaysStr(TODAY,70) ? credit.expiresDate : addDaysStr(TODAY,70);
+  for (let d = TODAY; d <= horizon; d = addDaysStr(d,1)){
+    if (instructorBlockedDates.includes(d)) continue;
+    const dow = dayOfWeekOf(d);
+    CLASSES.forEach(cls => {
+      if (cls.dayOfWeek !== dow) return;
+      if (!cls.levels.includes(level)) return;
+      if (cls.studentIds.includes(studentId)) return; // a make-up is an extra session, not just next week's own class
+      const headcount = cls.studentIds.length + makeupBookings.filter(b => b.classId===cls.id && b.date===d).length;
+      const spotsLeft = cls.capacity - headcount;
+      if (spotsLeft <= 0) return;
+      results.push({ classId:cls.id, label:cls.label, date:d, time:cls.time, venue:cls.venue, spotsLeft });
+    });
+  }
+  return results;
+}
+function bookMakeup(studentId, creditId, classId, date){
+  const credit = makeupCredits.find(c => c.id === creditId);
+  if (!credit || computeCreditStatus(credit) !== 'available') return;
+  credit.status = 'used';
+  credit.usedClassId = classId;
+  credit.usedDate = date;
+  makeupBookings.push({ creditId, studentId, classId, date });
+  markAttendance(studentId, date, 'makeup');
+  toast('Make-up booked for ' + formatDateLabel(date) + '.');
+}
+
+// ---- coach's own make-up availability, When2Meet-style ----
+// The coach paints hourly slots as free; these are independent of any recurring class,
+// so ANY child with an available credit can book one, regardless of level — it's a
+// personal 1:1 slot the coach is offering, not a seat in an existing group class.
+let availableSlots = new Set();   // 'YYYY-MM-DD_HH'
+let slotBookings = {};            // 'YYYY-MM-DD_HH' -> { studentId, creditId }
+
+function bookAdHocMakeup(studentId, creditId, date, hour){
+  const key = date + '_' + hour;
+  if (!availableSlots.has(key) || slotBookings[key]) return;
+  const credit = makeupCredits.find(c => c.id === creditId);
+  if (!credit || computeCreditStatus(credit) !== 'available') return;
+  credit.status = 'used';
+  credit.usedDate = date;
+  credit.usedHour = hour;
+  credit.usedClassId = null;
+  slotBookings[key] = { studentId, creditId };
+  availableSlots.delete(key);
+  markAttendance(studentId, date, 'makeup');
+  toast('Make-up booked for ' + STUDENTS[studentId].name.split(' ')[0] + ', ' + formatDateLabel(date) + ' ' + formatHourLabel(hour) + '.');
+}
+
+function renderWeekGrid(weekStart, role){
+  const days = [];
+  for (let i=0;i<7;i++) days.push(addDaysStr(weekStart,i));
+  const dowShort = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  let html = `<div class="week-grid"><div class="wg-corner"></div>`;
+  days.forEach(d => {
+    const dt = parseDate(d);
+    html += `<div class="wg-daylabel">${dowShort[dt.getDay()]}<br><span class="dnum">${dt.getDate()}</span></div>`;
+  });
+  for (let hour=GRID_START_HOUR; hour<GRID_END_HOUR; hour++){
+    html += `<div class="wg-hourlabel">${formatHourLabel(hour)}</div>`;
+    days.forEach(d => {
+      const cls = classesOnDate(d).filter(c => Math.floor(c.startHour) === hour);
+      const key = d + '_' + hour;
+      if (cls.length){
+        html += `<div class="grid-cell class-cell">${cls.map(c=>c.label).join(', ')}<span style="font-size:9px;">${cls[0].time}</span></div>`;
+      } else if (slotBookings[key]){
+        const st = STUDENTS[slotBookings[key].studentId];
+        html += `<div class="grid-cell booked-cell" title="${st.name} \u2014 make-up">${st.name.split(' ')[0]}<span style="font-size:9px;">Make-up</span></div>`;
+      } else if (availableSlots.has(key)){
+        const act = role==='owner' ? `data-action="toggle-slot" data-date="${d}" data-hour="${hour}"` : `data-action="pick-slot" data-date="${d}" data-hour="${hour}"`;
+        html += `<div class="grid-cell available-cell" ${act}>Free</div>`;
+      } else {
+        const act = role==='owner' ? `data-action="toggle-slot" data-date="${d}" data-hour="${hour}"` : '';
+        html += `<div class="grid-cell empty-cell" ${act}></div>`;
+      }
+    });
+  }
+  html += `</div>`;
+  return html;
+}
+
+// attendance history for August 2026 — seeded past Saturdays + "today" (unmarked until instructor acts)
+let attendanceRecords = [
+  { studentId:'ella',   date:'2026-08-01', status:'present' },
+  { studentId:'ella',   date:'2026-08-08', status:'present' },
+  { studentId:'ella',   date:'2026-08-15', status:'present' },
+  { studentId:'oli',    date:'2026-08-01', status:'present' },
+  { studentId:'oli',    date:'2026-08-08', status:'present' },
+  { studentId:'oli',    date:'2026-08-15', status:'present' },
+  { studentId:'kaihsu', date:'2026-08-01', status:'present' },
+  { studentId:'kaihsu', date:'2026-08-08', status:'present' },
+  { studentId:'kaihsu', date:'2026-08-15', status:'present' },
+  { studentId:'kaiyang',date:'2026-08-01', status:'present' },
+  { studentId:'kaiyang',date:'2026-08-08', status:'present' },
+  { studentId:'kaiyang',date:'2026-08-15', status:'present' },
+  { studentId:'oscar',  date:'2026-08-01', status:'present' },
+  { studentId:'oscar',  date:'2026-08-08', status:'present' },
+  { studentId:'oscar',  date:'2026-08-15', status:'present' },
+  { studentId:'anna',   date:'2026-08-01', status:'present' },
+  { studentId:'anna',   date:'2026-08-08', status:'present' },
+  { studentId:'anna',   date:'2026-08-15', status:'present' },
+];
+
+const PARENT_NAME = { ella:'Aileen', oli:'Aileen', kaihsu:'Fiona', kaiyang:'Fiona', oscar:'Wang', anna:'Matija' };
+function parentChildren(parent){ return Object.keys(STUDENTS).filter(id => STUDENTS[id].parent === parent); }
+
+// The full SwimSafer journey, for the parent "All stages" roadmap. Blurbs are the
+// real Key Milestones text from the operator's own stage checklist. Foundation is the
+// operator's own pre-SwimSafer progression (from their Learn-to-Swim chart), split into
+// five gated levels — students only attempt SwimSafer Stage 1 after Foundation 5.
+const STAGE_ORDER = ['Foundation 1','Foundation 2','Foundation 3','Foundation 4','Foundation 5','Stage 1','Stage 2','Stage 3','Bronze','Silver','Gold'];
+const STAGE_ROADMAP = [
+  { name:'Foundation 1', official:false, blurb:'Confidence building \u2014 blowing bubbles, full face submersion, kicking with a float and with the face submerged, and confidence games. Differs a lot for students with fear of the water.' },
+  { name:'Foundation 2', official:false, blurb:'Independence without a float \u2014 rocket kicks (min. 2m), front float (min. 10s), back float (min. 10s), and jumping into the water.' },
+  { name:'Foundation 3', official:false, blurb:'Survival skills \u2014 rocket kicks with breathing (min. 5m), treading water (min. 10s), turning from a front float onto a back float, and a full jump-tread-kick-back sequence.' },
+  { name:'Foundation 4', official:false, blurb:'Freestyle \u2014 swim front crawl for at least 5m.' },
+  { name:'Foundation 5', official:false, blurb:'Backstroke \u2014 swim backstroke for at least 5m. After this, students are ready to attempt SwimSafer Stage 1.' },
+  { name:'Stage 1', official:true, blurb:'A 5-second front and back float with recovery to standing; 10m movement on the front; 5m on the back.' },
+  { name:'Stage 2', official:true, blurb:'25m of continuous movement on the front; scull, float or tread for 30 seconds; a 25m swim wearing a PFD after a clothed jump.' },
+  { name:'Stage 3', official:true, blurb:'25m each of front crawl, backstroke, breaststroke and survival backstroke; scull, float or tread for 50 seconds; 50m with a PFD, clothed.' },
+  { name:'Bronze', official:true, blurb:'25m each of four strokes, 100m continuous; scull, float or tread for 2 minutes; a 3-minute clothed survival swim.' },
+  { name:'Silver', official:true, blurb:'Timed swims \u2014 50m front crawl under 1:30, breaststroke under 1:50, backstroke under 1:40 \u2014 plus survival back, sidestroke, dolphin kick and 30 seconds of H.E.L.P.' },
+  { name:'Gold', official:true, blurb:'Timed 100m swims across all strokes, a roughly 400m mixed survival sequence, 1 minute of H.E.L.P., and building a self-made float from clothing.' },
+];
+
+// Pool profiles \u2014 confirmed once per venue, then fed to the AI lesson planner
+// so a plan is written for the actual physical space, not a generic pool.
+const POOL_PROFILES = {
+  "D'Leedon": {
+    length_m:25, width_m:12, depth:'1.0m (shallow end) to 2.0m (deep end)', lanes:6,
+    teachingZone:'Shallow end, roughly 8m \u00d7 6m, ropes at 1.2m',
+    equipment:['Kickboards','Pool noodles','Pull buoys','Child-size PFDs','Sinking rings'],
+  },
+  'Amber Residences': {
+    length_m:15, width_m:6, depth:'1.0m constant depth (condo pool)', lanes:0,
+    teachingZone:'Full pool \u2014 no lane ropes, shared with residents outside the booked slot',
+    equipment:['Kickboards','Pool noodles'],
+  },
+};
+
+// ---- Foundation 1-5: the operator's own pre-SwimSafer progression (not official SwimSafer) ----
+const TEMPLATE_FOUNDATION1 = {
+  name:'Foundation 1 \u2014 Confidence Building',
+  sequences:[
+    { name:'Brave the fear', criteria:[
+      { id:'f1-1', text:'Comfortable blowing bubbles in the water', checked:false, subSkills:[] },
+      { id:'f1-2', text:'Full face submersion', checked:false, subSkills:[] },
+      { id:'f1-3', text:'Kicking with a float', checked:false, subSkills:[] },
+      { id:'f1-4', text:'Kicking with face submersion', checked:false, subSkills:[] },
+      { id:'f1-5', text:'Takes part in games that build water confidence (KIDS)', checked:false, subSkills:[] },
+    ]},
+  ],
+};
+const TEMPLATE_FOUNDATION2 = {
+  name:'Foundation 2 \u2014 Independence (without float)',
+  sequences:[
+    { name:'Independence', criteria:[
+      { id:'f2-1', text:'Rocket kicks, minimum 2m', checked:false, subSkills:[] },
+      { id:'f2-2', text:'Front float, minimum 10s', checked:false, subSkills:[] },
+      { id:'f2-3', text:'Back float, minimum 10s', checked:false, subSkills:[] },
+      { id:'f2-4', text:'Jumping into the water (KIDS)', checked:false, subSkills:[] },
+    ]},
+  ],
+};
+const TEMPLATE_FOUNDATION3 = {
+  name:'Foundation 3 \u2014 Survival Skills',
+  sequences:[
+    { name:'Survival basics', criteria:[
+      { id:'f3-1', text:'Rocket kicks with breathing, minimum 5m', checked:false, subSkills:[] },
+      { id:'f3-2', text:'Tread water, minimum 10s', checked:false, subSkills:[] },
+      { id:'f3-3', text:'Front float, turning onto a back float', checked:false, subSkills:[] },
+      { id:'f3-4', text:'Jump into water \u2192 tread water \u2192 rocket kick back to the wall (KIDS)', checked:false, subSkills:[] },
+    ]},
+  ],
+};
+const TEMPLATE_FOUNDATION4 = {
+  name:'Foundation 4 \u2014 Freestyle',
+  sequences:[
+    { name:'Freestyle', criteria:[
+      { id:'f4-1', text:'Swim freestyle (front crawl), minimum 5m', checked:false, subSkills:[] },
+    ]},
+  ],
+};
+const TEMPLATE_FOUNDATION5 = {
+  name:'Foundation 5 \u2014 Backstroke',
+  sequences:[
+    { name:'Backstroke', criteria:[
+      { id:'f5-1', text:'Swim backstroke, minimum 5m', checked:false, subSkills:[] },
+    ]},
+  ],
+};
+
+// Stage 1 curriculum (from the operator's own checklist), locked official criteria + editable coaching sub-skills.
+// The checked defaults below double as Kai Hsu's demo seed; every other student gets a freshly
+// blanked (or lightly re-seeded) copy at load time \u2014 see studentProgress below.
+const TEMPLATE_STAGE1 = {
+  name:'Stage 1',
+  sequences:[
+    { name:'Sequence 1A — without goggles', criteria:[
+      { id:'a1', text:'Enter the water with a slide-in entry', checked:true, subSkills:[] },
+      { id:'a2', text:'Swim on the back 5m', checked:true, subSkills:[] },
+      { id:'a3', text:'Submerge head, open eyes, blow bubbles, and identify an object on the pool floor', checked:false, subSkills:[] },
+      { id:'a4', text:'Perform a front float for 5s and recover to standing', checked:false, subSkills:[
+        { id:'a4-1', text:'Face in the water, relaxed', weight:1, checked:true },
+        { id:'a4-2', text:'Arms extended forward', weight:1, checked:true },
+        { id:'a4-3', text:'Hips rise to the surface', weight:1, checked:false },
+        { id:'a4-4', text:'Controlled recovery to standing', weight:1, checked:true },
+      ]},
+      { id:'a5', text:'Perform a back float for 5s and recover to standing', checked:true, subSkills:[] },
+      { id:'a6', text:'Swim 10m (front crawl or breaststroke)', checked:false, subSkills:[] },
+      { id:'a7', text:'Signal distress and call for help', checked:true, subSkills:[] },
+      { id:'a8', text:'Grasp the float and float for 10s', checked:true, subSkills:[] },
+      { id:'a9', text:'Move with the float to the pool edge', checked:true, subSkills:[] },
+      { id:'a10', text:'Exit safely from the water', checked:true, subSkills:[] },
+    ]},
+    { name:'Sequence 1B — shorts & t-shirt', criteria:[
+      { id:'b1', text:'Correctly fit a PFD and jump into the water', checked:false, subSkills:[] },
+      { id:'b2', text:'Float for 30s and exit', checked:false, subSkills:[] },
+    ]},
+    { name:'Swim', criteria:[
+      { id:'s1', text:'Swim 25m (front crawl or breaststroke)', checked:false, subSkills:[
+        { id:'s1-1', text:'Body position — horizontal, streamlined', weight:1, checked:true },
+        { id:'s1-2', text:'Flutter kick from the hips', weight:1, checked:true },
+        { id:'s1-3', text:'High-elbow arm recovery', weight:1, checked:false },
+        { id:'s1-4', text:'Rhythmic side breathing', weight:2, checked:false },
+        { id:'s1-5', text:'Consistent stroke timing', weight:1, checked:true },
+      ]},
+      { id:'s2', text:'Swim 15m (backstroke or survival backstroke)', checked:true, subSkills:[] },
+    ]},
+    { name:'Theory and water safety knowledge', criteria:[
+      { id:'t1', text:'Water safety theory quiz', checked:false, subSkills:[], needsVerify:true },
+    ]},
+  ],
+};
+
+// Stage 2 curriculum, same source \u2014 what Kai Hsu moves into once he passes his Stage 1 check.
+const TEMPLATE_STAGE2 = {
+  name:'Stage 2',
+  sequences:[
+    { name:'Sequence 2A \u2014 without goggles', criteria:[
+      { id:'c1', text:'Enter the water with a step-in entry', checked:false, subSkills:[] },
+      { id:'c2', text:'Front float 10s, swim 5m on front, roll over and back float 10s', checked:false, subSkills:[] },
+      { id:'c3', text:'Scull, float or tread water for 30s', checked:false, subSkills:[] },
+      { id:'c4', text:'In chest-deep water, perform a feet-first surface dive and recover an object', checked:false, subSkills:[
+        { id:'c4-1', text:'Feet-first entry, vertical body', weight:1, checked:false },
+        { id:'c4-2', text:'Equalise or clear ears if needed', weight:1, checked:false },
+        { id:'c4-3', text:'Locate and grasp the object', weight:1, checked:false },
+      ]},
+      { id:'c5', text:'Resurface and exit safely from the water', checked:false, subSkills:[] },
+    ]},
+    { name:'Sequence 2B \u2014 shorts & t-shirt', criteria:[
+      { id:'d1', text:'Swim 15m using any survival stroke', checked:false, subSkills:[] },
+      { id:'d2', text:'Swim to the pool edge and climb out', checked:false, subSkills:[] },
+      { id:'d3', text:'Correctly fit a PFD and jump into water at least 1.4m deep, swim 25m with PFD, climb out', checked:false, subSkills:[] },
+    ]},
+    { name:'Swim', criteria:[
+      { id:'e1', text:'Swim 50m continuously: 25m front crawl, 25m backstroke', checked:false, subSkills:[] },
+    ]},
+    { name:'Theory and water safety knowledge', criteria:[
+      { id:'f1', text:'Water safety theory quiz', checked:false, subSkills:[], needsVerify:true },
+    ]},
+  ],
+};
+
+// Stage 3, from the operator's tracker (Sequence 3A / 3B / Swim / Theory) \u2014 same shape as 1 & 2.
+const TEMPLATE_STAGE3 = {
+  name:'Stage 3',
+  sequences:[
+    { name:'Sequence 3A \u2014 without goggles', criteria:[
+      { id:'st3-1', text:'Enter the water with a stride or straddle entry in deep water', checked:false, subSkills:[] },
+      { id:'st3-2', text:'Swim 25m breaststroke, 25m survival backstroke', checked:false, subSkills:[] },
+      { id:'st3-3', text:'Scull head-first on the back for 10s and recover', checked:false, subSkills:[] },
+      { id:'st3-4', text:'Scull, float or tread for a further 50s', checked:false, subSkills:[] },
+      { id:'st3-5', text:'In chest-deep water, swim through hoops placed 2m apart (flutter kick), surface and exit', checked:false, subSkills:[] },
+    ]},
+    { name:'Sequence 3B \u2014 shorts & t-shirt', criteria:[
+      { id:'st3-6', text:'Swim 25m to a PFD', checked:false, subSkills:[] },
+      { id:'st3-7', text:'Correctly fit a PFD in the water, swim 50m with PFD and exit', checked:false, subSkills:[] },
+    ]},
+    { name:'Swim', criteria:[
+      { id:'st3-8', text:'Swim 115m continuously: 25m front crawl, 25m breaststroke, 25m backstroke, 25m survival backstroke, 15m sidestroke', checked:false, subSkills:[] },
+    ]},
+    { name:'Theory and water safety knowledge', criteria:[
+      { id:'st3-9', text:'Water safety theory quiz', checked:false, subSkills:[], needsVerify:true },
+    ]},
+  ],
+};
+
+// Bronze / Silver / Gold, reconstructed from the official checklist's category table
+// (Entries & Exits, Sculling & Body Orientation, Underwater Skills, Movement & Strokes,
+// Survival & Activity Skills, Rescue Skills) since the tracker doesn't break these three
+// into lettered sequences the way it does Stages 1-3.
+const TEMPLATE_BRONZE = {
+  name:'Bronze',
+  sequences:[
+    { name:'Entries & Exits', criteria:[
+      { id:'brz-1', text:'Compact jump entry', checked:false, subSkills:[] },
+    ]},
+    { name:'Sculling & Body Orientation', criteria:[
+      { id:'brz-2', text:'Forward somersault', checked:false, subSkills:[] },
+      { id:'brz-3', text:'Scull, float or tread water for 2 minutes', checked:false, subSkills:[] },
+    ]},
+    { name:'Underwater Skills', criteria:[
+      { id:'brz-4', text:'Feet-first surface dive to at least 1.4m, swim through hoops placed 2m apart', checked:false, subSkills:[] },
+    ]},
+    { name:'Movement & Strokes', criteria:[
+      { id:'brz-5', text:'Swim 100m continuously: 25m each of front crawl, backstroke, breaststroke and survival backstroke', checked:false, subSkills:[] },
+    ]},
+    { name:'Survival & Activity Skills (clothed)', criteria:[
+      { id:'brz-6', text:'Clothed: swim slowly for 3 minutes, changing between survival backstroke, sidestroke and survival breaststroke every 15m', checked:false, subSkills:[] },
+      { id:'brz-7', text:'Wave and call for help', checked:false, subSkills:[] },
+      { id:'brz-8', text:'Retrieve a flotation aid thrown 2m away and use it to reach the edge', checked:false, subSkills:[] },
+    ]},
+    { name:'Rescue Skills', criteria:[
+      { id:'brz-9', text:'Throw a flotation aid to a partner 2m away and instruct them to kick to the edge', checked:false, subSkills:[] },
+    ]},
+    { name:'Theory and water safety knowledge', criteria:[
+      { id:'brz-10', text:'Water safety theory quiz', checked:false, subSkills:[], needsVerify:true },
+    ]},
+  ],
+};
+const TEMPLATE_SILVER = {
+  name:'Silver',
+  sequences:[
+    { name:'Entries & Exits', criteria:[
+      { id:'slv-1', text:'Dive entry from a crouching position', checked:false, subSkills:[] },
+    ]},
+    { name:'Sculling & Body Orientation', criteria:[
+      { id:'slv-2', text:'Backward somersault', checked:false, subSkills:[] },
+      { id:'slv-3', text:'Scull, float or tread water while putting on a PFD in the water', checked:false, subSkills:[] },
+    ]},
+    { name:'Underwater Skills', criteria:[
+      { id:'slv-4', text:'Feet-first surface dive to at least 1.4m, swim through hoops placed 3m apart', checked:false, subSkills:[] },
+    ]},
+    { name:'Movement & Strokes (timed)', criteria:[
+      { id:'slv-5', text:'50m front crawl', timed:true, thresholdSec:90, thresholdLabel:'\u2264 1:30', recordedValue:'1:42', checked:false, subSkills:[] },
+      { id:'slv-6', text:'50m breaststroke', timed:true, thresholdSec:110, thresholdLabel:'\u2264 1:50', recordedValue:'2:05', checked:false, subSkills:[] },
+      { id:'slv-7', text:'50m backstroke', timed:true, thresholdSec:100, thresholdLabel:'\u2264 1:40', recordedValue:'1:38', checked:true, subSkills:[] },
+      { id:'slv-8', text:'25m survival backstroke', checked:true, subSkills:[] },
+      { id:'slv-9', text:'25m sidestroke', checked:false, subSkills:[] },
+      { id:'slv-10', text:'10m dolphin kick on the front', checked:false, subSkills:[] },
+    ]},
+    { name:'Survival & Activity Skills (clothed, long pants)', criteria:[
+      { id:'slv-11', text:'Straddle jump into deep water', checked:false, subSkills:[] },
+      { id:'slv-12', text:'Feet-first surface dive, swim through hoops 3m apart, and resurface', checked:false, subSkills:[] },
+      { id:'slv-13', text:'45m quick front crawl', checked:false, subSkills:[] },
+      { id:'slv-14', text:'Signal for help and receive a thrown PFD', checked:false, subSkills:[] },
+      { id:'slv-15', text:'Retrieve and fit a PFD while treading water', checked:false, subSkills:[] },
+      { id:'slv-16', text:'Hold the H.E.L.P. position for 30 seconds', checked:false, subSkills:[] },
+      { id:'slv-17', text:'Swim 25m wearing the PFD and exit', checked:false, subSkills:[] },
+    ]},
+    { name:'Rescue Skills', criteria:[
+      { id:'slv-18', text:'Throw a PFD to a partner 3m away and instruct them to kick to the edge', checked:false, subSkills:[] },
+    ]},
+    { name:'Theory and water safety knowledge', criteria:[
+      { id:'slv-19', text:'Water safety theory quiz', checked:false, subSkills:[], needsVerify:true },
+    ]},
+  ],
+};
+const TEMPLATE_GOLD = {
+  name:'Gold',
+  sequences:[
+    { name:'Entries & Exits', criteria:[
+      { id:'gld-1', text:'Standing dive entry', checked:false, subSkills:[] },
+    ]},
+    { name:'Sculling & Body Orientation', criteria:[
+      { id:'gld-2', text:'Scull, float or tread water while making a self-made float, within 5 minutes', checked:false, subSkills:[] },
+    ]},
+    { name:'Underwater Skills', criteria:[
+      { id:'gld-3', text:'Head-first surface dive (tuck or pike) to at least 1.8m, equalising if needed; swim through hoops placed 5m apart', checked:false, subSkills:[] },
+    ]},
+    { name:'Movement & Strokes (timed)', criteria:[
+      { id:'gld-4', text:'100m front crawl', timed:true, thresholdSec:180, thresholdLabel:'\u2264 3:00', recordedValue:'3:20', checked:false, subSkills:[] },
+      { id:'gld-5', text:'100m breaststroke', timed:true, thresholdSec:240, thresholdLabel:'\u2264 4:00', recordedValue:'4:15', checked:false, subSkills:[] },
+      { id:'gld-6', text:'100m backstroke', timed:true, thresholdSec:200, thresholdLabel:'\u2264 3:20', recordedValue:'3:20', checked:true, subSkills:[] },
+      { id:'gld-7', text:'50m survival backstroke', checked:false, subSkills:[] },
+      { id:'gld-8', text:'50m sidestroke', checked:false, subSkills:[] },
+      { id:'gld-9', text:'15m butterfly', checked:false, subSkills:[] },
+    ]},
+    { name:'Survival & Activity Skills (clothed, long pants)', criteria:[
+      { id:'gld-10', text:'Compact jump entry', checked:false, subSkills:[] },
+      { id:'gld-11', text:'Head-first dive to at least 1.8m', checked:false, subSkills:[] },
+      { id:'gld-12', text:'Swim through hoops placed 5m apart', checked:false, subSkills:[] },
+      { id:'gld-13', text:'45m front crawl sprint', checked:false, subSkills:[] },
+      { id:'gld-14', text:'50m slow survival stroke', checked:false, subSkills:[] },
+      { id:'gld-15', text:'Remove trousers and float using them, within 5 minutes', checked:false, subSkills:[] },
+      { id:'gld-16', text:'Hold the H.E.L.P. position for 1 minute', checked:false, subSkills:[] },
+      { id:'gld-17', text:'Swim 25m using a self-made float and exit', checked:false, subSkills:[] },
+    ]},
+    { name:'Theory and water safety knowledge', criteria:[
+      { id:'gld-18', text:'Water safety theory quiz', checked:false, subSkills:[], needsVerify:true },
+    ]},
+  ],
+};
+
+const TEMPLATES = {
+  'Foundation 1':TEMPLATE_FOUNDATION1, 'Foundation 2':TEMPLATE_FOUNDATION2, 'Foundation 3':TEMPLATE_FOUNDATION3,
+  'Foundation 4':TEMPLATE_FOUNDATION4, 'Foundation 5':TEMPLATE_FOUNDATION5,
+  'Stage 1':TEMPLATE_STAGE1, 'Stage 2':TEMPLATE_STAGE2, 'Stage 3':TEMPLATE_STAGE3,
+  'Bronze':TEMPLATE_BRONZE, 'Silver':TEMPLATE_SILVER, 'Gold':TEMPLATE_GOLD,
+};
+function templateForLevel(level){ return TEMPLATES[level] || TEMPLATE_FOUNDATION1; }
+
+function cloneTree(t){ return JSON.parse(JSON.stringify(t)); }
+function blankTree(t){
+  const c = cloneTree(t);
+  c.sequences.forEach(seq => seq.criteria.forEach(cr => {
+    if (!cr.timed) cr.checked = false;
+    if (cr.subSkills) cr.subSkills.forEach(s => s.checked = false);
+  }));
+  return c;
+}
+function seedChecked(tree, ids){
+  ids.forEach(id => { for (const seq of tree.sequences){ const c = seq.criteria.find(c=>c.id===id); if (c) c.checked = true; } });
+  return tree;
+}
+
+// Each student gets their OWN independent progress tree \u2014 checking a box for
+// Kai Hsu must never affect Oli, Ella, or anyone else, even though they may share a template.
+let studentProgress = {
+  kaihsu: cloneTree(TEMPLATE_STAGE1),                                  // Kai Hsu keeps the rich baked-in seed above
+  kaiyang: seedChecked(blankTree(TEMPLATE_STAGE1), ['a1','a2']),
+  oli:    seedChecked(blankTree(TEMPLATE_STAGE1), ['a1','a2','a5']),
+  ella:   seedChecked(blankTree(TEMPLATE_FOUNDATION1), ['f1-1','f1-3']),
+  oscar:  seedChecked(blankTree(TEMPLATE_STAGE1), ['a1']),
+  anna:   seedChecked(blankTree(TEMPLATE_SILVER), ['slv-2','slv-7','slv-8']),
+};
+
+let stageCompletions = []; // {studentId, stage, date, result: 'pass' | 'regressed'}
+let progressHistory = {};  // studentId -> [{level, progress}] snapshot taken right before each promotion, so a mistaken promotion can be undone exactly
+
+/* ============================== STATE ============================== */
+
+let state = {
+  role: 'instructor',
+  instructor: { screen:'calendar', calMonth:'2026-08', selectedDate:'2026-08-29', classId:null, studentId:null, offline:false, queued:0, checkingAssessment:false },
+  parent: { childId:'ella', tab:'progress', bookingCreditId:null, pendingSlot:null },
+  owner: { tab:'overview' },
+  grid: { weekStart: weekStartOf('2026-08-29') },
+  invoicesGenerated: false,
+  invoiceStatus: {},   // parentName -> 'pending' | 'paid'
+  aiSummaries: {},      // studentId -> { instructorSummary, parentSummary, generatedAt, sources, approved, loading, error }
+  lessonPlans: {},       // classId -> { objective, warmup, progression[], grouping, equipment, coachingCues, contingency, stretch, review, generatedAt, sources, editing, overrideText, approved, loading, error }
+};
+
+/* ============================== CALCULATIONS ============================== */
+
+function criterionPct(c){
+  if (c.timed) return c.checked ? 100 : 0;
+  if (!c.subSkills || c.subSkills.length === 0) return c.checked ? 100 : 0;
+  const total = c.subSkills.reduce((s,x)=>s+x.weight,0);
+  const done = c.subSkills.reduce((s,x)=>s+(x.checked?x.weight:0),0);
+  return total ? Math.round(done/total*100) : 0;
+}
+function criterionAchieved(c){ return criterionPct(c) === 100; }
+function sequencePct(seq){
+  const arr = seq.criteria.map(criterionPct);
+  return arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
+}
+function stagePct(stage){
+  const arr = stage.sequences.flatMap(s=>s.criteria.map(criterionPct));
+  return arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length) : 0;
+}
+function stageReady(stage){
+  return stage.sequences.every(seq => seq.criteria.every(criterionAchieved));
+}
+function findCriterion(stage, id){
+  for (const seq of stage.sequences){
+    const c = seq.criteria.find(c=>c.id===id);
+    if (c) return c;
+  }
+  return null;
+}
+function stageForStudent(studentId){
+  return studentProgress[studentId];
+}
+
+function chargeableCount(studentId, period){
+  return attendanceRecords.filter(r => r.studentId===studentId && r.date.startsWith(period) && BILLING_RULES[r.status].chargeable).length;
+}
+function invoiceForParent(parent, period){
+  const children = parentChildren(parent);
+  const lines = children.map(id => {
+    const n = chargeableCount(id, period);
+    return { studentId:id, name:STUDENTS[id].name, count:n, rate:RATE[id], amount:n*RATE[id] };
+  });
+  const total = lines.reduce((s,l)=>s+l.amount,0);
+  return { parent, period, lines, total, ref:'INV-'+parent.toUpperCase()+'-'+period.replace('-','') };
+}
+
+function markAttendance(studentId, date, status){
+  const existing = attendanceRecords.find(r=>r.studentId===studentId && r.date===date);
+  const prevStatus = existing ? existing.status : null;
+  if (existing) existing.status = status;
+  else attendanceRecords.push({ studentId, date, status });
+
+  const prevRule = prevStatus ? BILLING_RULES[prevStatus] : null;
+  const newRule = BILLING_RULES[status];
+  // If this exact absence is no longer credit-eligible (instructor corrected a mis-mark),
+  // revoke the credit it earned, provided it hasn't already been used.
+  if (prevRule && prevRule.credit && !newRule.credit){
+    const idx = makeupCredits.findIndex(c => c.studentId===studentId && c.issuedDate===date && c.status==='available');
+    if (idx > -1) makeupCredits.splice(idx,1);
+  }
+  // If this newly-marked status is credit-eligible, try to issue one (subject to the monthly cap).
+  if (newRule.credit && !(prevRule && prevRule.credit)){
+    issueMakeupCreditIfEligible(studentId, date);
+  }
+}
+function attendanceStatus(studentId, date){
+  const r = attendanceRecords.find(r=>r.studentId===studentId && r.date===date);
+  return r ? r.status : null;
+}
+
+/* ============================== ICONS ============================== */
+
+const ICON = {
+  back:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>',
+  check:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+  lock:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>',
+  pencil:'<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>',
+};
+
+/* ============================== RENDER: META BAR ============================== */
+
+function renderMetaBar(){
+  const seg = (val,label) => `<button data-action="set-role" data-role="${val}" class="${state.role===val?'active':''}">${label}</button>`;
+  return `
+  <div class="meta-bar">
+    <span class="meta-label">Prototype — viewing as</span>
+    <div class="seg">${seg('instructor','Instructor')}${seg('parent','Parent')}${seg('owner','Owner')}</div>
+    <span class="meta-note">One shared dataset behind all three views — mark attendance as Instructor, then check Owner → Billing or Parent to see it flow through.</span>
+  </div>`;
+}
+
+/* ============================== RENDER: INSTRUCTOR ============================== */
+
+function renderInstructor(){
+  const ins = state.instructor;
+  const syncPill = `<button data-action="toggle-offline" class="sync-pill ${ins.offline?'offline':''}">
+      <span class="sync-dot"></span>${ins.offline ? 'Offline' : 'Online'}
+    </button>`;
+  const offlineBanner = ins.offline
+    ? `<div class="offline-banner">No signal — changes are saved on this phone${ins.queued? ` (${ins.queued} queued)`:''} and will sync automatically once you're back online.</div>`
+    : (ins.queued > 0 ? `<div class="offline-banner" style="background:var(--green-pale); color:#155343;">Synced ${ins.queued} change${ins.queued===1?'':'s'} to the server.</div>` : '');
+
+  let header, body;
+
+  if (ins.screen === 'calendar'){
+    const [cy, cm] = ins.calMonth.split('-').map(Number);
+    const first = new Date(cy, cm-1, 1);
+    const startWeekday = first.getDay();
+    const daysInMonth = new Date(cy, cm, 0).getDate();
+    const dows = ['S','M','T','W','T','F','S'];
+    let grid = dows.map(d => `<div class="cal-dow">${d}</div>`).join('');
+    for (let i=0;i<startWeekday;i++) grid += `<div class="cal-cell empty"></div>`;
+    for (let d=1; d<=daysInMonth; d++){
+      const dateStr = ymd(cy,cm,d);
+      const has = classesOnDate(dateStr).length > 0;
+      grid += `<div class="cal-cell ${dateStr===TODAY?'today':''} ${dateStr===ins.selectedDate?'selected':''} ${instructorBlockedDates.includes(dateStr)?'blocked':''}" data-action="open-day" data-date="${dateStr}">
+        <span>${d}</span>${has?'<span class="dot"></span>':''}
+      </div>`;
+    }
+    header = `<div class="phone-header">
+        <div class="cal-nav" style="width:100%;">
+          <button data-action="cal-prev">${ICON.back}</button>
+          <h2 style="font-size:16px;">${monthLabel(cy,cm)}</h2>
+          <button data-action="cal-next" style="transform:scaleX(-1);">${ICON.back}</button>
+        </div>
+      </div>`;
+    body = `<div class="cal-grid">${grid}</div>
+      <p style="font-size:11.5px; color:var(--slate); margin-top:14px; text-align:center;">Green dot = classes scheduled that day. Tap any date to view or mark attendance.</p>`;
+  }
+
+  else if (ins.screen === 'day'){
+    const dateStr = ins.selectedDate;
+    const classes = classesOnDate(dateStr);
+    const when = dateStr > TODAY ? 'upcoming' : dateStr < TODAY ? 'past' : 'today';
+    header = `<div class="phone-header">
+        <button class="back-btn" data-action="nav" data-to="calendar">${ICON.back}</button>
+        <div><h2>${formatDateLabel(dateStr)}</h2><div class="sub">${classes.length} class${classes.length===1?'':'es'} scheduled \u00b7 ${when}</div></div>
+      </div>`;
+    body = classes.length ? classes.map(c => {
+      const roster = studentsForClassDate(c.id, dateStr);
+      const marked = roster.filter(r => attendanceStatus(r.id, dateStr)).length;
+      return `
+      <button class="class-card" data-action="open-class" data-id="${c.id}">
+        <div>
+          <div class="class-time">${c.time}</div>
+          <div class="class-meta">${c.label} \u00b7 ${c.venue}${marked?` \u00b7 ${marked}/${roster.length} marked`:''}</div>
+        </div>
+        <div class="class-count">${roster.length}</div>
+      </button>`;
+    }).join('') : `<div class="card"><p style="font-size:13px; color:var(--slate);">No classes scheduled this day.</p></div>`;
+  }
+
+  else if (ins.screen === 'roster'){
+    const cls = CLASSES.find(c=>c.id===ins.classId);
+    const dateStr = ins.selectedDate;
+    const roster = studentsForClassDate(cls.id, dateStr);
+    header = `<div class="phone-header">
+        <button class="back-btn" data-action="nav" data-to="day">${ICON.back}</button>
+        <div><h2>${cls.label}</h2><div class="sub">${formatDateLabel(dateStr)} \u00b7 ${cls.time} \u00b7 ${cls.venue}</div></div>
+      </div>`;
+    body = renderLessonPlanCard(cls.id) + `<div class="lane-divider"><span></span></div>` + roster.map(({id:sid, makeup}) => {
+      const s = STUDENTS[sid];
+      const st = attendanceStatus(sid, dateStr);
+      return `
+      <div class="student-row">
+        <div class="name-line">
+          <div><div class="name">${s.name}${makeup?' <span class="pill pill-slate">Make-up</span>':''}</div><div class="level">${s.level}</div></div>
+        </div>
+        <div class="status-grid">
+          ${STATUS_ORDER.map(key => `
+            <button class="status-btn ${st===key?'on-'+key:''}" data-action="mark-attendance" data-student="${sid}" data-status="${key}">${BILLING_RULES[key].label}</button>
+          `).join('')}
+        </div>
+        <button class="assess-link" data-action="open-assess" data-student="${sid}">Assess skills \u2192</button>
+      </div>`;
+    }).join('');
+  }
+
+  else if (ins.screen === 'assess'){
+    const sid = ins.studentId;
+    const s = STUDENTS[sid];
+    const stage = stageForStudent(sid);
+    const pct = stagePct(stage);
+    const ready = stageReady(stage);
+    header = `<div class="phone-header">
+        <button class="back-btn" data-action="nav" data-to="roster">${ICON.back}</button>
+        <div><h2>${s.name}</h2><div class="sub">${s.level} \u00b7 ${pct}% complete</div></div>
+      </div>`;
+
+    let readyArea = '';
+    if (ready){
+      const nextLevel = STAGE_ORDER[STAGE_ORDER.indexOf(s.level)+1];
+      if (ins.checkingAssessment){
+        readyArea = `<div class="check-panel">
+          <div class="kicker">Assessment check \u2014 ${s.level}</div>
+          <p style="font-size:13px; line-height:1.5;">This records that you've personally observed ${s.name} perform every ${s.level} requirement to the SwimSafer standard, today.</p>
+          <div style="display:flex; gap:8px; margin-top:12px;">
+            <button class="btn btn-outline btn-sm" data-action="cancel-check">Not yet</button>
+            <button class="btn btn-coral btn-sm" data-action="confirm-promote" data-student="${sid}">Record pass</button>
+          </div>
+        </div>`;
+      } else {
+        readyArea = `<div class="ready-banner">
+          <span>${ICON.check} Ready for ${s.level} assessment</span>
+          ${nextLevel ? `<button class="btn btn-sm btn-on-green" data-action="start-check">Start assessment check</button>` : `<span class="pill" style="background:rgba(255,255,255,.25); color:#fff;">Top stage</span>`}
+        </div>`;
+      }
+    }
+
+    const aiCard = renderAICard(sid);
+    const undoBanner = (progressHistory[sid] && progressHistory[sid].length)
+      ? `<button class="btn btn-outline btn-sm" style="margin-bottom:12px;" data-action="regress-stage" data-student="${sid}">\u21b6 Undo promotion \u2014 back to ${progressHistory[sid][progressHistory[sid].length-1].level}</button>`
+      : '';
+    const seqHtml = stage.sequences.map(seq => `
+      <div class="sequence">
+        <div class="sequence-title"><span>${seq.name}</span><span class="pct">${sequencePct(seq)}%</span></div>
+        ${seq.criteria.map(c => renderCriterion(c, sid)).join('')}
+      </div>`).join('');
+    body = undoBanner + readyArea + aiCard + `<div class="lane-divider"><span></span></div>` + seqHtml;
+  }
+
+  return `
+  <div class="phone">
+    <div class="phone-status"><span>Poolside \u00b7 ${STUDENTS[ins.studentId||'kaihsu'] ? '' : ''}D'Leedon &amp; Amber Residences</span>${syncPill}</div>
+    ${offlineBanner}
+    ${header}
+    <div class="phone-body">${body}</div>
+  </div>`;
+}
+
+function renderCriterion(c, studentId){
+  const pct = criterionPct(c);
+  const achieved = criterionAchieved(c);
+  const lockOrCheck = (!c.timed && (!c.subSkills || c.subSkills.length===0))
+    ? `<div class="crit-check ${c.checked?'checked':''}" data-action="toggle-criterion" data-student="${studentId}" data-id="${c.id}">${c.checked?ICON.check:''}</div>`
+    : `<div class="crit-lock" title="Official SwimSafer criterion \u2014 locked">${ICON.lock}</div>`;
+
+  let extra = '';
+  if (c.timed){
+    extra = `<div class="timed-row">
+      <input type="text" value="${c.recordedValue}" data-action="edit-timed" data-student="${studentId}" data-id="${c.id}" />
+      <span class="threshold">target ${c.thresholdLabel}</span>
+      <span class="pill ${achieved?'pill-green':'pill-amber'}">${achieved?'Pass':'Not yet'}</span>
+    </div>`;
+  } else if (c.subSkills && c.subSkills.length){
+    extra = `<div class="sub-block">
+      <div class="sub-block-label">${ICON.pencil} Your coaching breakdown \u2014 editable</div>
+      ${c.subSkills.map(ss => `
+        <div class="sub-row">
+          <div class="sub-check ${ss.checked?'checked':''}" data-action="toggle-subskill" data-student="${studentId}" data-crit="${c.id}" data-sub="${ss.id}">${ss.checked?ICON.check:''}</div>
+          <div class="sub-text">${ss.text}</div>
+          ${ss.weight>1?`<div class="sub-weight">weight ${ss.weight}</div>`:''}
+        </div>`).join('')}
+    </div>
+    <div class="crit-pct-tag">${pct}% of this skill demonstrated</div>`;
+  }
+
+  return `<div class="criterion">
+    <div class="crit-top">
+      ${lockOrCheck}
+      <div class="crit-text">${c.text}${c.needsVerify?'<span class="verify-tag">wording pending verification against official card</span>':''}</div>
+    </div>
+    ${extra}
+  </div>`;
+}
+
+/* ============================== RENDER: AI COACHING SUMMARY ============================== */
+
+function renderAICard(sid){
+  const a = state.aiSummaries[sid];
+  if (!a){
+    return `<div class="card ai-card">
+      <div class="kicker">AI coaching summary</div>
+      <p style="font-size:12.5px; color:var(--slate); line-height:1.5;">Reads this student's assessment log and attendance and drafts two summaries \u2014 one for you, one for the parent. Nothing reaches a parent until you approve it.</p>
+      <button class="btn btn-navy btn-sm" style="margin-top:10px;" data-action="generate-summary" data-student="${sid}">Generate summary</button>
+    </div>`;
+  }
+  if (a.loading){
+    return `<div class="card ai-card"><div class="kicker">AI coaching summary</div><p style="font-size:13px; color:var(--slate);"><span class="spinner"></span>Reading the assessment log\u2026</p></div>`;
+  }
+  if (a.error){
+    return `<div class="card ai-card">
+      <div class="kicker">AI coaching summary</div>
+      <p style="font-size:13px; color:var(--red); line-height:1.5;">Couldn't reach the AI service just now.</p>
+      <button class="btn btn-outline btn-sm" style="margin-top:8px;" data-action="generate-summary" data-student="${sid}">Try again</button>
+    </div>`;
+  }
+  return `<div class="card ai-card">
+    <div class="ai-badge">AI-generated \u00b7 ${a.generatedAt}</div>
+    <div class="ai-meta">Claude Sonnet 4.6 \u00b7 based on ${a.sources}</div>
+    <label class="ai-label">Instructor view \u2014 edit freely</label>
+    <textarea class="ai-text" rows="3" data-action="edit-ai" data-student="${sid}" data-field="instructorSummary">${a.instructorSummary}</textarea>
+    <label class="ai-label">Parent view \u2014 edit freely</label>
+    <textarea class="ai-text" rows="3" data-action="edit-ai" data-student="${sid}" data-field="parentSummary">${a.parentSummary}</textarea>
+    <div style="display:flex; gap:8px; margin-top:12px;">
+      <button class="btn btn-outline btn-sm" data-action="generate-summary" data-student="${sid}">Regenerate</button>
+      <button class="btn btn-sm ${a.approved?'btn-outline':'btn-coral'}" data-action="approve-summary" data-student="${sid}">${a.approved?ICON.check+' Shared with parent':'Approve & share with parent'}</button>
+    </div>
+  </div>`;
+}
+
+/* ============================== RENDER: AI LESSON PLAN ============================== */
+
+function weakestArea(stage){
+  const c = stage.sequences.flatMap(s=>s.criteria).find(c => !criterionAchieved(c));
+  return c ? c.text : 'no clear gaps right now';
+}
+
+function renderLessonPlanCard(classId){
+  const cls = CLASSES.find(c=>c.id===classId);
+  const p = state.lessonPlans[classId];
+
+  if (!p){
+    return `<div class="card ai-card">
+      <div class="kicker">AI lesson plan</div>
+      <p style="font-size:12.5px; color:var(--slate); line-height:1.5;">Builds a plan for this exact group in this exact pool \u2014 using each student's progress, the venue's pool profile, and equipment on site.</p>
+      <button class="btn btn-navy btn-sm" style="margin-top:10px;" data-action="generate-lessonplan" data-class="${classId}">Generate lesson plan</button>
+    </div>`;
+  }
+  if (p.loading){
+    return `<div class="card ai-card"><div class="kicker">AI lesson plan</div><p style="font-size:13px; color:var(--slate);"><span class="spinner"></span>Planning around ${cls.venue}'s pool\u2026</p></div>`;
+  }
+  if (p.error){
+    return `<div class="card ai-card">
+      <div class="kicker">AI lesson plan</div>
+      <p style="font-size:13px; color:var(--red); line-height:1.5;">Couldn't reach the AI service just now.</p>
+      <button class="btn btn-outline btn-sm" style="margin-top:8px;" data-action="generate-lessonplan" data-class="${classId}">Try again</button>
+    </div>`;
+  }
+
+  const body = p.overrideText
+    ? `<textarea class="ai-text lp-raw" rows="14" data-action="edit-lp-raw" data-class="${classId}">${p.overrideText}</textarea>`
+    : `
+    <div class="lp-field"><b>Objective</b><span>${p.objective}</span></div>
+    <div class="lp-field"><b>Warm-up</b><span>${p.warmup}</span></div>
+    <div class="lp-field"><b>Progression</b><ol class="lp-steps">${(p.progression||[]).map(step=>`<li>${step}</li>`).join('')}</ol></div>
+    <div class="lp-field"><b>Grouping</b><span>${p.grouping}</span></div>
+    <div class="lp-field"><b>Equipment</b><span>${p.equipment}</span></div>
+    <div class="lp-field"><b>Coaching cues</b><span>${p.coachingCues}</span></div>
+    <div class="lp-field"><b>If they're struggling</b><span>${p.contingency}</span></div>
+    <div class="lp-field"><b>If they're ahead</b><span>${p.stretch}</span></div>
+    <div class="lp-field"><b>End-of-class review</b><span>${p.review}</span></div>`;
+
+  return `<div class="card ai-card">
+    <div class="ai-badge">AI-generated \u00b7 ${p.generatedAt}</div>
+    <div class="ai-meta">Claude Sonnet 4.6 \u00b7 based on ${p.sources}</div>
+    ${body}
+    <div style="display:flex; gap:8px; margin-top:12px; flex-wrap:wrap;">
+      <button class="btn btn-outline btn-sm" data-action="generate-lessonplan" data-class="${classId}">Regenerate</button>
+      ${p.overrideText ? '' : `<button class="btn btn-outline btn-sm" data-action="edit-lessonplan" data-class="${classId}">Edit</button>`}
+      <button class="btn btn-sm ${p.approved?'btn-outline':'btn-coral'}" data-action="approve-lessonplan" data-class="${classId}">${p.approved?ICON.check+' Approved':'Approve lesson plan'}</button>
+    </div>
+  </div>`;
+}
+
+/* ============================== RENDER: PARENT ============================== */
+
+function renderParent(){
+  const parentName = 'Aileen';
+  const kids = parentChildren(parentName);
+  const childId = state.parent.childId;
+  const child = STUDENTS[childId];
+  const tab = state.parent.tab;
+
+  const tabsHtml = kids.map(id => `
+    <button class="child-tab ${id===childId?'active':''}" data-action="select-child" data-id="${id}">
+      <div class="cname">${STUDENTS[id].name.split(' ')[0]}</div>
+      <div class="clevel">${STUDENTS[id].level}</div>
+    </button>`).join('');
+
+  const subtabsHtml = `<div class="subtab-row">
+      <button class="subtab ${tab==='progress'?'active':''}" data-action="set-parent-tab" data-tab="progress">Progress</button>
+      <button class="subtab ${tab==='roadmap'?'active':''}" data-action="set-parent-tab" data-tab="roadmap">All stages</button>
+      <button class="subtab ${tab==='schedule'?'active':''}" data-action="set-parent-tab" data-tab="schedule">Book a slot</button>
+    </div>`;
+
+  let content;
+
+  if (tab === 'roadmap'){
+    content = `<div class="card"><p style="font-size:12.5px; color:var(--slate); margin-bottom:2px;">The full SwimSafer 2.0 journey \u2014 ${child.name.split(' ')[0]} is currently on <b style="color:var(--navy);">${child.level}</b>.</p></div>
+      <div class="card" style="margin-top:10px;">${renderRoadmap(childId)}</div>`;
+  } else if (tab === 'schedule'){
+    content = renderParentSlotPicker();
+  } else {
+    const stage = stageForStudent(childId);
+    const pct = stagePct(stage);
+    const approvedAI = state.aiSummaries[childId] && state.aiSummaries[childId].approved ? state.aiSummaries[childId] : null;
+    const notableCriteria = stage.sequences.flatMap(s=>s.criteria).filter(c=>!c.timed);
+    const doneList = notableCriteria.filter(criterionAchieved).slice(0,3).map(c=>c.text);
+    const nextList = notableCriteria.filter(c=>!criterionAchieved(c)).slice(0,2).map(c=>c.text);
+
+    const invoice = invoiceForParent(parentName, '2026-08');
+    const status = state.invoicesGenerated ? (state.invoiceStatus[parentName] || 'pending') : null;
+    let invoiceBlock;
+    if (!state.invoicesGenerated){
+      invoiceBlock = `<div class="card"><p style="font-size:13px; color:var(--slate);">Your August invoice hasn't been issued yet \u2014 it's generated from actual attendance once the month wraps up.</p></div>`;
+    } else if (status === 'paid'){
+      invoiceBlock = `<div class="card">
+        <div class="kicker">Invoice \u2014 August 2026</div>
+        ${invoice.lines.map(l=>`<div class="invoice-line"><span>${l.name} \u2014 ${l.count} lesson${l.count===1?'':'s'}</span><span>$${l.amount}</span></div>`).join('')}
+        <div class="invoice-total"><span>Total</span><span>$${invoice.total}</span></div>
+        <div style="margin-top:12px;"><span class="pill pill-green">${ICON.check} Paid</span></div>
+      </div>`;
+    } else {
+      invoiceBlock = `<div class="card">
+        <div class="kicker">Invoice \u2014 August 2026</div>
+        ${invoice.lines.map(l=>`<div class="invoice-line"><span>${l.name} \u2014 ${l.count} lesson${l.count===1?'':'s'}</span><span>$${l.amount}</span></div>`).join('')}
+        <div class="invoice-total"><span>Total due</span><span>$${invoice.total}</span></div>
+        <button class="btn btn-coral btn-block" style="margin-top:14px;" data-action="show-qr">Pay now</button>
+        <div id="qr-slot"></div>
+      </div>`;
+    }
+
+    content = `
+      <div class="stage-summary">
+        <div class="ring-wrap"><div class="ring" style="--pct:${pct}; --ring-color:var(--blue);"></div><div class="ring-hole">${pct}%</div></div>
+        <div><div class="sname">${child.name.split(' ')[0]} \u2014 ${child.level}</div><div class="scaption">on track for the next assessment</div></div>
+      </div>
+      ${approvedAI ? `<div class="card ai-card"><div class="kicker">From your coach</div><p class="lesson-note">${approvedAI.parentSummary}</p></div>` : ''}
+      <div class="card">
+        <div class="kicker">What ${child.name.split(' ')[0]} has nailed</div>
+        <p class="lesson-note">${doneList.length? doneList.map(t=>'\u2713 '+t).join('<br>') : 'Just getting started \u2014 check back after the next lesson.'}</p>
+      </div>
+      <div class="card">
+        <div class="kicker">What we're working on next</div>
+        <p class="lesson-note">${nextList.length? nextList.join('<br>') : 'Every criterion in this stage is looking strong.'}</p>
+      </div>
+      ${renderCreditsCard(childId)}
+      ${invoiceBlock}`;
+  }
+
+  return `
+  <div class="phone">
+    <div class="phone-status"><span>Signed in as ${parentName}</span></div>
+    <div class="phone-header"><div><h2>Progress</h2><div class="sub">Amber Residences &amp; D'Leedon</div></div></div>
+    <div class="phone-body">
+      <div class="child-tabs">${tabsHtml}</div>
+      ${subtabsHtml}
+      ${content}
+    </div>
+  </div>`;
+}
+
+function renderParentSlotPicker(){
+  const ws = state.grid.weekStart;
+  let html = `<div class="cal-nav" style="margin-bottom:10px;">
+      <button data-action="week-prev">${ICON.back}</button>
+      <h3 style="font-size:13px; color:var(--navy);">${formatWeekLabel(ws)}</h3>
+      <button data-action="week-next" style="transform:scaleX(-1);">${ICON.back}</button>
+    </div>
+    <div class="week-grid-wrap">${renderWeekGrid(ws, 'parent')}</div>
+    <div style="display:flex; gap:10px; margin-top:10px; font-size:11px; color:var(--slate); flex-wrap:wrap;">
+      <span><span class="legend-dot" style="background:var(--blue-pale);"></span>Regular class</span>
+      <span><span class="legend-dot" style="background:var(--green-pale);"></span>Free \u2014 tap to book</span>
+      <span><span class="legend-dot" style="background:#FDE9E2;"></span>Already booked</span>
+    </div>`;
+
+  if (state.parent.pendingSlot){
+    const { date, hour } = state.parent.pendingSlot;
+    const kids = parentChildren('Aileen').filter(id => makeupCredits.some(c => c.studentId===id && computeCreditStatus(c)==='available'));
+    html += `<div class="card" style="margin-top:12px; border-color:var(--blue);">
+      <div class="kicker">Book ${formatDateLabel(date)}, ${formatHourLabel(Number(hour))} for\u2026</div>
+      <p style="font-size:11.5px; color:var(--slate); margin-bottom:8px;">Choose which child this make-up is for \u2014 it'll use one of their available credits.</p>
+      ${kids.length
+        ? kids.map(id => `<button class="btn btn-coral btn-sm" style="margin:0 6px 6px 0;" data-action="confirm-slot-booking" data-student="${id}">${STUDENTS[id].name.split(' ')[0]}</button>`).join('')
+        : `<p style="font-size:12px; color:var(--slate);">Neither child has an available make-up credit right now.</p>`}
+      <button class="btn btn-outline btn-sm" style="margin-top:2px;" data-action="cancel-slot-pick">Cancel</button>
+    </div>`;
+  }
+  return html;
+}
+
+function renderCreditsCard(childId){
+  const childName = STUDENTS[childId].name.split(' ')[0];
+  const credits = makeupCredits.filter(c => c.studentId === childId);
+  if (!credits.length){
+    return `<div class="card"><div class="kicker">${childName}'s make-up credits</div><p style="font-size:12.5px; color:var(--slate); line-height:1.5;">Earned automatically from a notified absence \u2014 up to one a month, and each one is valid for two months.</p></div>`;
+  }
+  const rows = credits.map(c => {
+    const status = computeCreditStatus(c);
+    const usedWhere = c.usedClassId ? (CLASSES.find(cl=>cl.id===c.usedClassId)||{}).label : (c.usedHour!=null ? formatHourLabel(c.usedHour)+' slot with your coach' : '');
+    const pill = status==='available' ? `<span class="pill pill-green">Available</span>`
+               : status==='used' ? `<span class="pill pill-slate">Used ${formatDateLabel(c.usedDate)}${usedWhere?' \u2014 '+usedWhere:''}</span>`
+               : `<span class="pill pill-red">Expired</span>`;
+    let body = `<div class="credit-row"><span>${childName} \u2014 earned ${formatDateLabel(c.issuedDate)} <span style="color:var(--slate);">\u00b7 valid until ${formatDateLabel(c.expiresDate)}</span></span>${pill}</div>`;
+    if (status === 'available'){
+      const open = state.parent.bookingCreditId === c.id;
+      body += `<button class="btn btn-outline btn-sm" style="margin-top:8px;" data-action="toggle-book-credit" data-credit="${c.id}">${open?'Hide slots':'Book make-up'}</button>`;
+      if (open){
+        const slots = eligibleMakeupSlots(childId, c);
+        body += slots.length
+          ? slots.map(s => `<button class="slot-row" data-action="book-makeup" data-credit="${c.id}" data-student="${childId}" data-class="${s.classId}" data-date="${s.date}">
+              <span>${formatDateLabel(s.date)} \u00b7 ${s.time}</span>
+              <span class="slot-meta">${s.label} \u00b7 ${s.venue} \u00b7 ${s.spotsLeft} spot${s.spotsLeft===1?'':'s'} left</span>
+            </button>`).join('')
+          : `<p style="font-size:12px; color:var(--slate); margin-top:8px;">No other class at ${STUDENTS[childId].level} has room in the next couple of months \u2014 try the "Book a slot" tab for the coach's own availability instead.</p>`;
+      }
+    }
+    return `<div class="credit-card">${body}</div>`;
+  }).join('');
+  return `<div class="card"><div class="kicker">${childName}'s make-up credits</div>${rows}</div>`;
+}
+
+function renderRoadmap(childId){
+  const level = STUDENTS[childId].level;
+  const idx = STAGE_ORDER.indexOf(level);
+  return STAGE_ROADMAP.map(st => {
+    const stIdx = STAGE_ORDER.indexOf(st.name);
+    const status = stIdx < idx ? 'done' : stIdx === idx ? 'current' : 'upcoming';
+    const pill = status==='done' ? `<span class="pill pill-green">${ICON.check} Done</span>`
+               : status==='current' ? `<span class="pill pill-amber">Current</span>`
+               : `<span class="pill pill-slate">Upcoming</span>`;
+    return `<div class="roadmap-row ${status}">
+      <div class="roadmap-dot"></div>
+      <div style="flex:1;">
+        <div class="roadmap-top"><strong>${st.name}</strong>${pill}</div>
+        <p class="roadmap-blurb">${st.blurb}</p>
+        ${!st.official ? `<span class="verify-tag" style="background:var(--blue-pale); color:var(--blue);">school level, not SwimSafer-official</span>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ============================== RENDER: OWNER ============================== */
+
+function renderOwner(){
+  const tab = state.owner.tab;
+  const period = '2026-08';
+  const parents = ['Aileen','Fiona','Wang','Matija'];
+
+  const navBtn = (val,label) => `<button data-action="set-owner-tab" data-tab="${val}" class="${tab===val?'active':''}">${label}</button>`;
+
+  let main;
+
+  if (tab === 'overview'){
+    const readyCount = Object.keys(STUDENTS).filter(id => stageReady(studentProgress[id])).length;
+    const monthTotal = state.invoicesGenerated
+      ? parents.reduce((s,p)=>s+invoiceForParent(p,period).total,0)
+      : parents.reduce((s,p)=>s+invoiceForParent(p,period).total,0); // same calc, shown regardless of generation for the KPI
+    main = `
+      <h1>Overview</h1>
+      <div class="dash-sub">August 2026</div>
+      <div class="kpi-row">
+        <div class="kpi" style="--kpi-color:var(--navy);"><div class="num">6</div><div class="lbl">Active students</div></div>
+        <div class="kpi" style="--kpi-color:var(--green);"><div class="num">$${monthTotal}</div><div class="lbl">Billed from actual attendance</div></div>
+        <div class="kpi" style="--kpi-color:var(--amber);"><div class="num">${parents.filter(p=>(state.invoiceStatus[p]||'pending')!=='paid').length}</div><div class="lbl">Invoices pending</div></div>
+        <div class="kpi" style="--kpi-color:var(--blue);"><div class="num">${readyCount}</div><div class="lbl">Ready for assessment</div></div>
+      </div>
+      <div class="callout"><b>$0</b> of this written off by an estimated discount rate \u2014 every dollar traces back to an actual attendance record. The old spreadsheet guessed 12.5\u201320% of lessons would be missed and billed accordingly, whether or not that was true.</div>
+      ${stageCompletions.length ? `<div class="callout" style="background:var(--blue-pale); color:var(--navy);">${stageCompletions.map(sc=> sc.result==='regressed'
+        ? `<b>${STUDENTS[sc.studentId].name}</b>\u2019s promotion from ${sc.stage} was undone, ${sc.date}.`
+        : `<b>${STUDENTS[sc.studentId].name}</b> passed the ${sc.stage} check and was promoted to ${STAGE_ORDER[STAGE_ORDER.indexOf(sc.stage)+1]}, ${sc.date}.`
+      ).join('<br>')}</div>` : ''}
+      <div class="section-header"><h3>This week</h3></div>
+      <div class="table-card"><table>
+        <tr><th>Day</th><th>Class</th><th>Venue</th><th>Level</th></tr>
+        ${CLASSES.map(c=>`<tr><td>${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][c.dayOfWeek]}</td><td>${c.label}</td><td>${c.venue}</td><td>${c.studentIds.map(id=>STUDENTS[id].level).join(', ')}</td></tr>`).join('')}
+      </table></div>`;
+  }
+
+  else if (tab === 'roster'){
+    main = `
+      <h1>Roster</h1>
+      <div class="dash-sub">6 active students across 2 venues</div>
+      <div class="table-card"><table>
+        <tr><th>Student</th><th>Level</th><th>Venue</th><th>Parent</th><th>Rate</th></tr>
+        ${Object.keys(STUDENTS).map(id=>{const s=STUDENTS[id]; return `<tr><td>${s.name}</td><td>${s.level}</td><td>${s.venue}</td><td>${s.parent}</td><td>$${RATE[id]}/lesson</td></tr>`}).join('')}
+      </table></div>`;
+  }
+
+  else if (tab === 'billing'){
+    if (!state.invoicesGenerated){
+      main = `
+        <h1>Billing</h1>
+        <div class="dash-sub">August 2026</div>
+        <div class="card" style="max-width:520px;">
+          <p style="font-size:13.5px; line-height:1.6;">Invoices for August haven't been generated yet. Generating pulls actual attendance for the period and applies your absence-billing rules \u2014 no estimated discount involved.</p>
+          <button class="btn btn-navy" style="margin-top:12px;" data-action="generate-invoices">Generate invoices for August</button>
+        </div>`;
+    } else {
+      main = `
+        <h1>Billing</h1>
+        <div class="dash-sub">August 2026 \u00b7 generated from actual attendance</div>
+        <div class="table-card"><table>
+          <tr><th>Parent</th><th>Children</th><th>Amount</th><th>Status</th><th></th></tr>
+          ${parents.map(p=>{
+            const inv = invoiceForParent(p,period);
+            const st = state.invoiceStatus[p] || 'pending';
+            const kids = parentChildren(p).map(id=>STUDENTS[id].name).join(', ');
+            const pill = st==='paid' ? `<span class="pill pill-green">${ICON.check} Paid</span>` : `<span class="pill pill-amber">Pending</span>`;
+            const action = st==='paid' ? '' : `<button class="btn btn-outline btn-sm" data-action="mark-paid" data-parent="${p}">Mark as paid</button>`;
+            return `<tr><td>${p}</td><td>${kids}</td><td>$${inv.total}</td><td>${pill}</td><td>${action}</td></tr>`;
+          }).join('')}
+        </table></div>`;
+    }
+  }
+
+  else if (tab === 'curriculum'){
+    const viewLevel = state.owner.curriculumLevel || 'Stage 1';
+    const viewTemplate = templateForLevel(viewLevel);
+    const isOfficial = STAGE_ROADMAP.find(s=>s.name===viewLevel).official;
+    main = `
+      <h1>Curriculum \u2014 ${viewLevel}</h1>
+      <div class="dash-sub">${isOfficial ? 'Official criteria are locked; your coaching breakdown underneath each one is yours to edit.' : 'Your own pre-SwimSafer progression \u2014 fully editable, not an official SwimSafer level.'}</div>
+      <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:20px;">
+        ${STAGE_ORDER.map(lv => `<button class="btn btn-sm ${lv===viewLevel?'btn-navy':'btn-outline'}" data-action="set-curriculum-level" data-level="${lv}">${lv}</button>`).join('')}
+      </div>
+      ${viewTemplate.sequences.map(seq => `
+        <div class="section-header"><h3>${seq.name}</h3></div>
+        <div class="table-card" style="padding:4px 16px;">
+          ${seq.criteria.map(c => `
+            <div class="curric-lock-row">${isOfficial?ICON.lock:ICON.pencil}<span>${c.text}${c.timed?` <span class="pill pill-slate">target ${c.thresholdLabel}</span>`:''}</span>${c.needsVerify?'<span class="verify-tag">verify wording</span>':''}</div>
+            ${c.subSkills.length ? c.subSkills.map(ss=>`<div class="curric-sub-row">${ICON.pencil}<span>${ss.text}</span>${ss.weight>1?`<span class="sub-weight">weight ${ss.weight}</span>`:''}</div>`).join('') : ''}
+          `).join('')}
+        </div>`).join('')}`;
+  }
+
+  else if (tab === 'venues'){
+    main = `
+      <h1>Venues</h1>
+      <div class="dash-sub">Pool profiles feed the AI lesson planner \u2014 confirm once per venue, reused every time a class is scheduled there.</div>
+      <div class="kpi-row" style="grid-template-columns:1fr 1fr;">
+        ${Object.keys(POOL_PROFILES).map(v => { const p = POOL_PROFILES[v]; return `
+        <div class="card" style="border-left:3px solid var(--blue);">
+          <div class="kicker">${v}</div>
+          <p style="font-size:13px; line-height:1.7;">
+            ${p.length_m}m \u00d7 ${p.width_m}m \u00b7 depth ${p.depth}<br>
+            ${p.lanes ? p.lanes + ' lanes' : 'No fixed lanes'} \u00b7 teaching zone: ${p.teachingZone}<br>
+            Equipment on site: ${p.equipment.join(', ')}
+          </p>
+        </div>`;}).join('')}
+      </div>`;
+  }
+
+  else if (tab === 'classes'){
+    main = `
+      <h1>Classes</h1>
+      <div class="dash-sub">Capacity and level bands are what the make-up finder checks \u2014 a make-up can only be offered into a class serving the right level with room left.</div>
+      <div class="table-card"><table>
+        <tr><th>Class</th><th>Day / Time</th><th>Venue</th><th>Levels served</th><th>Capacity</th><th>Enrolled</th></tr>
+        ${CLASSES.map(c => `<tr>
+          <td>${c.label}</td>
+          <td>${['Sun','Mon','Tue','Wed','Thu','Fri','Sat'][c.dayOfWeek]} \u00b7 ${c.time}</td>
+          <td>${c.venue}</td>
+          <td style="font-size:12px;">${c.levels.join(', ')}</td>
+          <td><input type="number" min="1" value="${c.capacity}" class="cap-input" data-action="edit-capacity" data-class="${c.id}"></td>
+          <td>${c.studentIds.length}</td>
+        </tr>`).join('')}
+      </table></div>
+      <div class="section-header" style="margin-top:26px;"><h3>Coach availability</h3></div>
+      <div class="card" style="max-width:480px;">
+        <p style="font-size:13px; color:var(--slate); line-height:1.6; margin-bottom:10px;">Block a date to keep it out of the make-up finder \u2014 regular classes still run, but no make-up will be offered into them that day.</p>
+        <div style="display:flex; gap:8px;">
+          <input type="date" id="block-date-input" style="flex:1; border:1.5px solid var(--line); border-radius:8px; padding:9px; font-size:13px;">
+          <button class="btn btn-navy btn-sm" data-action="block-date">Block</button>
+        </div>
+        ${instructorBlockedDates.length ? `<div style="margin-top:12px;">${instructorBlockedDates.map(d => `<span class="pill pill-slate" style="margin:3px 4px 0 0;">${formatDateLabel(d)} <button data-action="unblock-date" data-date="${d}" style="border:0; background:none; cursor:pointer; margin-left:4px; color:var(--red); font-weight:700;">\u00d7</button></span>`).join('')}</div>` : ''}
+      </div>`;
+  }
+
+  else if (tab === 'schedule'){
+    main = `
+      <h1>Schedule</h1>
+      <div class="dash-sub">Your regular classes are shown in blue \u2014 fixed, not editable here. Click any open cell to mark yourself free for a make-up; parents see this exact grid and can book straight into it, for whichever of their children needs it.</div>
+      <div class="cal-nav" style="max-width:640px; margin-bottom:14px;">
+        <button data-action="week-prev">${ICON.back}</button>
+        <h3 style="font-size:14px; color:var(--navy);">${formatWeekLabel(state.grid.weekStart)}</h3>
+        <button data-action="week-next" style="transform:scaleX(-1);">${ICON.back}</button>
+      </div>
+      <div class="week-grid-wrap">${renderWeekGrid(state.grid.weekStart, 'owner')}</div>
+      <div style="display:flex; gap:16px; margin-top:14px; font-size:12px; color:var(--slate); flex-wrap:wrap;">
+        <span><span class="legend-dot" style="background:var(--blue-pale);"></span>Regular class</span>
+        <span><span class="legend-dot" style="background:var(--green-pale);"></span>Free \u2014 open to book</span>
+        <span><span class="legend-dot" style="background:#FDE9E2;"></span>Make-up booked</span>
+      </div>`;
+  }
+
+  return `
+  <div class="dashboard">
+    <div class="dash-nav">
+      <div class="brand">Owner</div>
+      ${navBtn('overview','Overview')}
+      ${navBtn('roster','Roster')}
+      ${navBtn('billing','Billing')}
+      ${navBtn('curriculum','Curriculum')}
+      ${navBtn('venues','Venues')}
+      ${navBtn('classes','Classes')}
+      ${navBtn('schedule','Schedule')}
+    </div>
+    <div class="dash-main">${main}</div>
+  </div>`;
+}
+
+/* ============================== MAIN RENDER ============================== */
+
+function render(){
+  const root = document.getElementById('root');
+  const view = state.role==='instructor' ? renderInstructor() : state.role==='parent' ? renderParent() : renderOwner();
+  root.innerHTML = renderMetaBar() + `<div class="stage">${view}</div>`;
+}
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(window.__toastTimer);
+  window.__toastTimer = setTimeout(()=>t.classList.remove('show'), 2200);
+}
+
+/* ============================== FAKE PAYNOW QR ============================== */
+
+function seededRandom(seed){
+  let h = 0;
+  for (let i=0;i<seed.length;i++){ h = (Math.imul(31,h) + seed.charCodeAt(i)) | 0; }
+  return function(){
+    h ^= h << 13; h ^= h >>> 17; h ^= h << 5;
+    return ((h >>> 0) / 4294967295);
+  };
+}
+function drawFakeQR(canvas, seedText){
+  const size = 25, cell = 9;
+  canvas.width = size*cell; canvas.height = size*cell;
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  const rand = seededRandom(seedText);
+  const inFinder = (x,y) => {
+    const zones = [[0,0],[size-7,0],[0,size-7]];
+    return zones.some(([zx,zy]) => x>=zx && x<zx+7 && y>=zy && y<zy+7);
+  };
+  ctx.fillStyle = '#0A3D5C';
+  for (let y=0;y<size;y++){
+    for (let x=0;x<size;x++){
+      if (inFinder(x,y)) continue;
+      if (rand() > 0.56) ctx.fillRect(x*cell, y*cell, cell, cell);
+    }
+  }
+  const drawFinder = (ox,oy) => {
+    ctx.fillStyle = '#0A3D5C'; ctx.fillRect(ox*cell, oy*cell, 7*cell, 7*cell);
+    ctx.fillStyle = '#fff'; ctx.fillRect((ox+1)*cell, (oy+1)*cell, 5*cell, 5*cell);
+    ctx.fillStyle = '#0A3D5C'; ctx.fillRect((ox+2)*cell, (oy+2)*cell, 3*cell, 3*cell);
+  };
+  drawFinder(0,0); drawFinder(size-7,0); drawFinder(0,size-7);
+}
+
+/* ============================== EVENTS ============================== */
+
+document.addEventListener('click', function(e){
+  const el = e.target.closest('[data-action]');
+  if (!el) return;
+  const action = el.dataset.action;
+
+  if (action === 'set-role'){ state.role = el.dataset.role; render(); }
+
+  else if (action === 'nav'){ state.instructor.screen = el.dataset.to; state.instructor.checkingAssessment = false; render(); }
+
+  else if (action === 'open-class'){ state.instructor.classId = el.dataset.id; state.instructor.screen = 'roster'; render(); }
+
+  else if (action === 'open-day'){ state.instructor.selectedDate = el.dataset.date; state.instructor.screen = 'day'; render(); }
+
+  else if (action === 'cal-prev' || action === 'cal-next'){
+    const dir = action === 'cal-prev' ? -1 : 1;
+    state.instructor.calMonth = addMonthsStr(state.instructor.calMonth+'-01', dir).slice(0,7);
+    render();
+  }
+
+  else if (action === 'open-assess'){ state.instructor.studentId = el.dataset.student; state.instructor.screen = 'assess'; state.instructor.checkingAssessment = false; render(); }
+
+  else if (action === 'start-check'){ state.instructor.checkingAssessment = true; render(); }
+
+  else if (action === 'cancel-check'){ state.instructor.checkingAssessment = false; render(); }
+
+  else if (action === 'confirm-promote'){
+    const sid = el.dataset.student;
+    const s = STUDENTS[sid];
+    const idx = STAGE_ORDER.indexOf(s.level);
+    const next = STAGE_ORDER[idx+1];
+    if (next){
+      const passedLevel = s.level;
+      stageCompletions.push({ studentId:sid, stage:passedLevel, date:TODAY, result:'pass' });
+      if (!progressHistory[sid]) progressHistory[sid] = [];
+      progressHistory[sid].push({ level:passedLevel, progress:cloneTree(studentProgress[sid]) });
+      s.level = next;
+      studentProgress[sid] = blankTree(templateForLevel(next));
+      delete state.aiSummaries[sid];
+      state.instructor.checkingAssessment = false;
+      render();
+      if (passedLevel === 'Foundation 2'){
+        toast('\uD83C\uDFC5 Ace Award earned! ' + s.name + ' moves on to Foundation 3.');
+      } else {
+        toast(s.name + ' passed the check \u2014 promoted to ' + next + '.');
+      }
+    }
+  }
+
+  else if (action === 'generate-summary'){
+    generateAISummary(el.dataset.student);
+  }
+
+  else if (action === 'approve-summary'){
+    const a = state.aiSummaries[el.dataset.student];
+    if (a){ a.approved = true; render(); toast('Shared with parent.'); }
+  }
+
+  else if (action === 'generate-lessonplan'){
+    generateLessonPlan(el.dataset.class);
+  }
+
+  else if (action === 'approve-lessonplan'){
+    const p = state.lessonPlans[el.dataset.class];
+    if (p){ p.approved = true; render(); toast('Lesson plan approved.'); }
+  }
+
+  else if (action === 'edit-lessonplan'){
+    const p = state.lessonPlans[el.dataset.class];
+    if (p){
+      p.overrideText = flattenLessonPlan(p);
+      render();
+    }
+  }
+
+  else if (action === 'set-parent-tab'){ state.parent.tab = el.dataset.tab; render(); }
+
+  else if (action === 'toggle-book-credit'){
+    state.parent.bookingCreditId = state.parent.bookingCreditId === el.dataset.credit ? null : el.dataset.credit;
+    render();
+  }
+
+  else if (action === 'book-makeup'){
+    bookMakeup(el.dataset.student, el.dataset.credit, el.dataset.class, el.dataset.date);
+    state.parent.bookingCreditId = null;
+    render();
+  }
+
+  else if (action === 'block-date'){
+    const input = document.getElementById('block-date-input');
+    if (input && input.value && !instructorBlockedDates.includes(input.value)){
+      instructorBlockedDates.push(input.value);
+      render();
+      toast('Blocked ' + formatDateLabel(input.value) + ' for make-ups.');
+    }
+  }
+
+  else if (action === 'unblock-date'){
+    instructorBlockedDates = instructorBlockedDates.filter(d => d !== el.dataset.date);
+    render();
+  }
+
+  else if (action === 'week-prev' || action === 'week-next'){
+    state.grid.weekStart = addDaysStr(state.grid.weekStart, action==='week-prev' ? -7 : 7);
+    render();
+  }
+
+  else if (action === 'toggle-slot'){
+    const key = el.dataset.date + '_' + el.dataset.hour;
+    if (availableSlots.has(key)) availableSlots.delete(key); else availableSlots.add(key);
+    render();
+  }
+
+  else if (action === 'pick-slot'){
+    state.parent.pendingSlot = { date: el.dataset.date, hour: el.dataset.hour };
+    render();
+  }
+
+  else if (action === 'cancel-slot-pick'){ state.parent.pendingSlot = null; render(); }
+
+  else if (action === 'confirm-slot-booking'){
+    const { date, hour } = state.parent.pendingSlot;
+    const studentId = el.dataset.student;
+    const credit = makeupCredits.find(c => c.studentId===studentId && computeCreditStatus(c)==='available');
+    if (credit) bookAdHocMakeup(studentId, credit.id, date, Number(hour));
+    state.parent.pendingSlot = null;
+    render();
+  }
+
+  else if (action === 'regress-stage'){
+    const sid = el.dataset.student;
+    const hist = progressHistory[sid];
+    if (hist && hist.length){
+      const snap = hist.pop();
+      const student = STUDENTS[sid];
+      const fromLevel = student.level;
+      student.level = snap.level;
+      studentProgress[sid] = snap.progress;
+      stageCompletions.push({ studentId:sid, stage:fromLevel, date:TODAY, result:'regressed' });
+      delete state.aiSummaries[sid];
+      render();
+      toast(student.name + ' moved back to ' + snap.level + ' \u2014 promotion undone.');
+    }
+  }
+
+  else if (action === 'toggle-offline'){
+    state.instructor.offline = !state.instructor.offline;
+    if (!state.instructor.offline && state.instructor.queued > 0){
+      toast('Syncing ' + state.instructor.queued + ' change' + (state.instructor.queued===1?'':'s') + '\u2026');
+      setTimeout(()=>{ state.instructor.queued = 0; render(); toast('All changes saved.'); }, 900);
+    }
+    render();
+  }
+
+  else if (action === 'mark-attendance'){
+    markAttendance(el.dataset.student, state.instructor.selectedDate, el.dataset.status);
+    if (state.instructor.offline) state.instructor.queued++;
+    render();
+  }
+
+  else if (action === 'toggle-criterion'){
+    const c = findCriterion(stageForStudent(el.dataset.student), el.dataset.id);
+    c.checked = !c.checked;
+    if (state.instructor.offline) state.instructor.queued++;
+    render();
+  }
+
+  else if (action === 'toggle-subskill'){
+    const c = findCriterion(stageForStudent(el.dataset.student), el.dataset.crit);
+    const ss = c.subSkills.find(s=>s.id===el.dataset.sub);
+    ss.checked = !ss.checked;
+    if (state.instructor.offline) state.instructor.queued++;
+    render();
+  }
+
+  else if (action === 'select-child'){ state.parent.childId = el.dataset.id; render(); }
+
+  else if (action === 'show-qr'){
+    const slot = document.getElementById('qr-slot');
+    const invoice = invoiceForParent('Aileen','2026-08');
+    slot.innerHTML = `<div class="qr-box">
+        <canvas id="qr-canvas"></canvas>
+        <div class="qr-ref">${invoice.ref}</div>
+        <div class="qr-caption">Scan with any Singapore banking app \u2014 DBS, OCBC, UOB, and more. Amount and reference are already filled in.</div>
+        <div class="qr-caption" style="margin-top:6px;">Lincoln confirms once the transfer lands \u2014 this updates automatically for you.</div>
+      </div>`;
+    drawFakeQR(document.getElementById('qr-canvas'), invoice.ref);
+  }
+
+  else if (action === 'set-owner-tab'){ state.owner.tab = el.dataset.tab; render(); }
+
+  else if (action === 'set-curriculum-level'){ state.owner.curriculumLevel = el.dataset.level; render(); }
+
+  else if (action === 'generate-invoices'){
+    state.invoicesGenerated = true;
+    ['Aileen','Fiona','Wang','Matija'].forEach(p => { if (!state.invoiceStatus[p]) state.invoiceStatus[p] = 'pending'; });
+    render();
+    toast('4 invoices generated from August attendance.');
+  }
+
+  else if (action === 'mark-paid'){
+    state.invoiceStatus[el.dataset.parent] = 'paid';
+    render();
+    toast('Marked ' + el.dataset.parent + '\u2019s invoice as paid.');
+  }
+});
+
+document.addEventListener('change', function(e){
+  if (e.target.dataset.action === 'edit-timed'){
+    const c = findCriterion(stageForStudent(e.target.dataset.student), e.target.dataset.id);
+    c.recordedValue = e.target.value;
+    const parts = e.target.value.split(':').map(Number);
+    const secs = (parts.length===2 ? parts[0]*60+parts[1] : NaN);
+    c.checked = !isNaN(secs) && secs <= c.thresholdSec;
+    render();
+  }
+
+  else if (e.target.dataset.action === 'edit-ai'){
+    const a = state.aiSummaries[e.target.dataset.student];
+    if (a) a[e.target.dataset.field] = e.target.value;
+  }
+
+  else if (e.target.dataset.action === 'edit-lp-raw'){
+    const p = state.lessonPlans[e.target.dataset.class];
+    if (p) p.overrideText = e.target.value;
+  }
+
+  else if (e.target.dataset.action === 'edit-capacity'){
+    const cls = CLASSES.find(c => c.id === e.target.dataset.class);
+    const v = parseInt(e.target.value, 10);
+    if (cls && v > 0){ cls.capacity = v; render(); }
+  }
+});
+
+/* ============================== AI COACHING INTELLIGENCE ============================== */
+// Real calls to the Anthropic Messages API. In the claude.ai artifact runtime this is
+// authenticated automatically; in other environments (e.g. this file opened standalone)
+// the fetch will fail and the UI falls back to its error state below.
+
+async function callClaude(prompt){
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method:'POST',
+    headers:{ 'Content-Type':'application/json' },
+    body: JSON.stringify({
+      model:'claude-sonnet-4-6',
+      max_tokens:1000,
+      messages:[{ role:'user', content: prompt }],
+    }),
+  });
+  if (!res.ok) throw new Error('HTTP ' + res.status);
+  const data = await res.json();
+  const text = (data.content || []).map(b => b.text || '').join('');
+  const clean = text.replace(/```json|```/g, '').trim();
+  return JSON.parse(clean);
+}
+
+async function generateAISummary(studentId){
+  const s = STUDENTS[studentId];
+  const stage = stageForStudent(studentId);
+  const achieved = [], developing = [];
+  stage.sequences.forEach(seq => seq.criteria.forEach(c => {
+    if (criterionAchieved(c)) achieved.push(c.text);
+    else developing.push(c.text + (c.subSkills && c.subSkills.length ? ' (' + criterionPct(c) + '% of the coaching breakdown so far)' : ''));
+  }));
+  const records = attendanceRecords.filter(r => r.studentId === studentId);
+  const attendanceText = records.map(r => r.date + ': ' + BILLING_RULES[r.status].label).join('; ') || 'no lessons logged yet';
+  const sourcesLabel = 'assessment log (' + (achieved.length + developing.length) + ' criteria), attendance (' + records.length + ' lessons)';
+
+  state.aiSummaries[studentId] = { loading:true };
+  render();
+
+  const prompt = `You are a coaching assistant for a children's swim school in Singapore following the SwimSafer 2.0 syllabus.
+Student: ${s.name}, current stage: ${s.level}.
+Achieved criteria: ${achieved.join('; ') || 'none yet'}.
+Still developing: ${developing.join('; ') || 'none'}.
+Attendance record: ${attendanceText}.
+
+Write two short outputs and respond with ONLY valid JSON, no markdown fences, no preamble, in exactly this shape:
+{"instructorSummary": "...", "parentSummary": "..."}
+
+instructorSummary: 2-3 sentences, technical coaching language, naming a specific strength, a specific weakness, and one concrete recommended focus for the next lesson. Written for the instructor's own eyes.
+parentSummary: 2-3 sentences, warm and encouraging, zero technical jargon, written directly to the parent about their child by name.`;
+
+  try {
+    const parsed = await callClaude(prompt);
+    state.aiSummaries[studentId] = {
+      instructorSummary: parsed.instructorSummary,
+      parentSummary: parsed.parentSummary,
+      generatedAt: new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }),
+      sources: sourcesLabel,
+      approved: false,
+    };
+  } catch (err){
+    state.aiSummaries[studentId] = { error:true };
+  }
+  render();
+}
+
+function flattenLessonPlan(p){
+  return `Objective: ${p.objective}
+
+Warm-up: ${p.warmup}
+
+Progression:
+${(p.progression||[]).map((s,i)=>(i+1)+'. '+s).join('\n')}
+
+Grouping: ${p.grouping}
+Equipment: ${p.equipment}
+Coaching cues: ${p.coachingCues}
+If they're struggling: ${p.contingency}
+If they're ahead: ${p.stretch}
+End-of-class review: ${p.review}`;
+}
+
+async function generateLessonPlan(classId){
+  const cls = CLASSES.find(c => c.id === classId);
+  const pool = POOL_PROFILES[cls.venue];
+  const studentsInfo = cls.studentIds.map(id => {
+    const st = STUDENTS[id];
+    const stage = stageForStudent(id);
+    return `${st.name} (${st.level}, ${stagePct(stage)}% through the stage, weakest area: ${weakestArea(stage)})`;
+  }).join('; ');
+
+  state.lessonPlans[classId] = { loading:true };
+  render();
+
+  const prompt = `You are a coaching assistant for a children's swim school in Singapore.
+Class: ${cls.label} at ${cls.venue}, ${cls.time}.
+Pool: ${pool.length_m}m x ${pool.width_m}m, depth ${pool.depth}, teaching zone: ${pool.teachingZone}, lanes: ${pool.lanes || 'none'}.
+Equipment available: ${pool.equipment.join(', ')}.
+Students attending: ${studentsInfo}.
+
+Produce a realistic lesson plan for THIS specific group in THIS specific pool \u2014 not a generic swimming lesson. Respond with ONLY valid JSON, no markdown fences, no preamble, in exactly this shape:
+{"objective":"...", "warmup":"...", "progression":["step 1 with rough timing","step 2 with rough timing","step 3 with rough timing"], "grouping":"...", "equipment":"...", "coachingCues":"...", "contingency":"...", "stretch":"...", "review":"..."}
+Keep every field to 1-2 sentences except progression, which should be 3-5 short ordered steps.`;
+
+  try {
+    const parsed = await callClaude(prompt);
+    state.lessonPlans[classId] = Object.assign({}, parsed, {
+      generatedAt: new Date().toLocaleTimeString([], { hour:'2-digit', minute:'2-digit' }),
+      sources: cls.studentIds.length + ' students\u2019 progress, ' + cls.venue + ' pool profile',
+      approved: false,
+    });
+  } catch (err){
+    state.lessonPlans[classId] = { error:true };
+  }
+  render();
+}
+
+render();
+</script>
+</body>
+</html>

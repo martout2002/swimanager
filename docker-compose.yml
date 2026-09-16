@@ -1,0 +1,20 @@
+# Local Postgres for development, so testing never touches Supabase.
+#   docker compose up -d     (or: bun run db:up)
+services:
+  db:
+    image: postgres:16-alpine
+    ports: ['5433:5432']  # 5433 on the host, to sidestep any Postgres already on 5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: swim
+      POSTGRES_DB: swimanager
+    volumes:
+      - swimanager-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U postgres -d swimanager']
+      interval: 3s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  swimanager-pg:
