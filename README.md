@@ -4,7 +4,7 @@ SwimSafer progress tracking, scheduling and billing for a small swim school. Thr
 over **one shared dataset** — mark attendance as the Instructor, then look at
 Owner → Billing or the Parent portal and watch it flow through.
 
-- **Next.js 15** (App Router) + **TypeScript**, server actions for every write
+- **Next.js 16** (App Router) + **TypeScript**, server actions for every write
 - **Postgres** via **Drizzle ORM** (`postgres.js` driver) — local Docker for dev, Supabase for prod
 - Email + password auth, signed HTTP-only cookie, 30-day session, role on the session
 - Deploys to **Vercel** as-is
@@ -128,7 +128,7 @@ src/lib/school.ts            derived reads over the loaded dataset (invoices, ro
 src/lib/data.ts              loadSchool() — every read the views do
 src/lib/actions.ts           every write, as server actions
 src/app/(views)/             the three signed-in views
-src/middleware.ts            cookie check and role routing
+src/proxy.ts                 cookie check and role routing
 ```
 
 ## Things worth knowing

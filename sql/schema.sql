@@ -55,7 +55,7 @@ create table if not exists classes (
 
 create table if not exists attendance (
   student_id  text not null references students(id) on delete cascade,
-  lesson_date date not null,
+  lesson_date text not null,
   status      text not null,
   primary key (student_id, lesson_date)
 );
@@ -63,10 +63,10 @@ create table if not exists attendance (
 create table if not exists makeup_credits (
   id            text primary key,
   student_id    text not null references students(id) on delete cascade,
-  issued_date   date not null,
-  expires_date  date not null,
+  issued_date   text not null,
+  expires_date  text not null,
   status        text not null default 'available',
-  used_date     date,
+  used_date     text,
   used_hour     integer,
   used_class_id text
 );
@@ -76,12 +76,12 @@ create table if not exists makeup_bookings (
   credit_id   text not null references makeup_credits(id) on delete cascade,
   student_id  text not null references students(id) on delete cascade,
   class_id    text not null references classes(id) on delete cascade,
-  booked_date date not null
+  booked_date text not null
 );
 
 -- The coach's own hourly make-up availability. student_id null = free, set = booked.
 create table if not exists coach_slots (
-  slot_date  date not null,
+  slot_date  text not null,
   slot_hour  integer not null,
   student_id text references students(id) on delete set null,
   credit_id  text references makeup_credits(id) on delete set null,
@@ -89,7 +89,7 @@ create table if not exists coach_slots (
 );
 
 create table if not exists blocked_dates (
-  blocked_date date primary key
+  blocked_date text primary key
 );
 
 -- A row exists only once invoices for that period have been generated.
@@ -104,7 +104,7 @@ create table if not exists stage_completions (
   id             uuid primary key default gen_random_uuid(),
   student_id     text not null references students(id) on delete cascade,
   stage          text not null,
-  completed_date date not null,
+  completed_date text not null,
   result         text not null,
   created_at     timestamptz not null default now()
 );

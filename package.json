@@ -16,6 +16,7 @@
     "db:reset": "bun run db:push && bun run db:seed"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.103.1",
     "bcryptjs": "^3.0.2",
     "clsx": "^2.1.1",
     "drizzle-kit": "^0.31.10",

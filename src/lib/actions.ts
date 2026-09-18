@@ -15,12 +15,14 @@ import {
   progressHistory,
   stageCompletions,
   students,
+  users,
 } from '@/db/schema';
 import {
   HOME_FOR_ROLE,
   createSession,
   destroySession,
   findUserByEmail,
+  hashPassword,
   requireSession,
   verifyPassword,
 } from './auth';
@@ -38,7 +40,7 @@ import {
 } from './swim';
 import { STAGE_ORDER, blankTree, templateForLevel, type StageTree } from './curriculum';
 
-export type ActionResult = { message?: string; error?: string };
+export type ActionResult = { message?: string; error?: string; success?: boolean; redirectTo?: string };
 
 /** Every view reads the same dataset, so a write invalidates all of them. */
 function revalidateAll(): void {
@@ -66,10 +68,7 @@ async function requireOwnChild(studentId: string): Promise<void> {
 
 /* ============================== auth ============================== */
 
-export async function loginAction(
-  _prev: ActionResult | null,
-  formData: FormData,
-): Promise<ActionResult> {
+export async function loginAction(prevState: unknown, formData: FormData) {
   const email = String(formData.get('email') ?? '').trim().toLowerCase();
   const password = String(formData.get('password') ?? '');
   const asParent = formData.get('asParent') === '1';
@@ -94,6 +93,7 @@ export async function loginAction(
     role: user.role,
     parentName: user.parentName,
   });
+  
   redirect(HOME_FOR_ROLE[user.role]);
 }
 
@@ -427,5 +427,87 @@ export async function markInvoicePaidAction(parentName: string): Promise<ActionR
     .set({ status: 'paid' })
     .where(and(eq(invoices.parentName, parentName), eq(invoices.period, PERIOD)));
   revalidateAll();
-  return { message: `Marked ${parentName}’s invoice as paid.` };
+  return { message: `Marked ${parentName}'s invoice as paid.` };
+}
+
+/* ============================== student management ============================== */
+
+export async function addStudentAction(
+  name: string,
+  level: string,
+  parentName: string,
+  venue: string,
+  rate: number,
+  classId: string,
+): Promise<ActionResult> {
+  await requireSession('owner');
+
+  const trimmedName = name.trim();
+  const trimmedParent = parentName.trim();
+  if (!trimmedName || !trimmedParent) {
+    return { error: 'Student name and parent name are required.' };
+  }
+
+  const existingUser = await db
+    .select()
+    .from(users)
+    .where(eq(users.parentName, trimmedParent))
+    .limit(1);
+
+  if (existingUser.length === 0) {
+    const email = `${trimmedParent.toLowerCase().replace(/\s+/g, '.')}@swimanager.test`;
+    const passwordHash = await hashPassword('swim1234');
+    await db.insert(users).values({
+      email,
+      passwordHash,
+      name: trimmedParent,
+      role: 'parent',
+      parentName: trimmedParent,
+    });
+  }
+
+  const studentId = `s-${trimmedName.toLowerCase().replace(/\s+/g, '-')}`;
+  const progress = blankTree(templateForLevel(level));
+
+  await db.insert(students).values({
+    id: studentId,
+    name: trimmedName,
+    level,
+    parentName: trimmedParent,
+    venue,
+    rate,
+    progress,
+  });
+
+  const classRow = await db.select().from(classes).where(eq(classes.id, classId)).limit(1);
+  if (classRow[0]) {
+    const currentIds = classRow[0].studentIds ?? [];
+    await db
+      .update(classes)
+      .set({ studentIds: [...currentIds, studentId] })
+      .where(eq(classes.id, classId));
+  }
+
+  revalidateAll();
+  return { message: `Added ${trimmedName}.` };
+}
+
+export async function deleteStudentAction(studentId: string): Promise<ActionResult> {
+  await requireSession('owner');
+
+  const student = await loadStudent(studentId);
+
+  const allClasses = await db.select().from(classes);
+  for (const cls of allClasses) {
+    if (cls.studentIds?.includes(studentId)) {
+      await db
+        .update(classes)
+        .set({ studentIds: cls.studentIds.filter((id) => id !== studentId) })
+        .where(eq(classes.id, cls.id));
+    }
+  }
+
+  await db.delete(students).where(eq(students.id, studentId));
+  revalidateAll();
+  return { message: `Removed ${student.name}.` };
 }

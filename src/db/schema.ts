@@ -52,7 +52,7 @@ export const attendance = pgTable(
     studentId: text('student_id')
       .notNull()
       .references(() => students.id, { onDelete: 'cascade' }),
-    lessonDate: date('lesson_date').notNull(),
+    lessonDate: text('lesson_date').notNull(),
     status: text('status').notNull(),
   },
   (t) => [primaryKey({ columns: [t.studentId, t.lessonDate] })],
@@ -63,10 +63,10 @@ export const makeupCredits = pgTable('makeup_credits', {
   studentId: text('student_id')
     .notNull()
     .references(() => students.id, { onDelete: 'cascade' }),
-  issuedDate: date('issued_date').notNull(),
-  expiresDate: date('expires_date').notNull(),
+  issuedDate: text('issued_date').notNull(),
+  expiresDate: text('expires_date').notNull(),
   status: text('status').notNull().default('available'),
-  usedDate: date('used_date'),
+  usedDate: text('used_date'),
   usedHour: integer('used_hour'),
   usedClassId: text('used_class_id'),
 });
@@ -82,13 +82,13 @@ export const makeupBookings = pgTable('makeup_bookings', {
   classId: text('class_id')
     .notNull()
     .references(() => classes.id, { onDelete: 'cascade' }),
-  bookedDate: date('booked_date').notNull(),
+  bookedDate: text('booked_date').notNull(),
 });
 
 export const coachSlots = pgTable(
   'coach_slots',
   {
-    slotDate: date('slot_date').notNull(),
+    slotDate: text('slot_date').notNull(),
     slotHour: integer('slot_hour').notNull(),
     studentId: text('student_id').references(() => students.id, { onDelete: 'set null' }),
     creditId: text('credit_id').references(() => makeupCredits.id, { onDelete: 'set null' }),
@@ -97,7 +97,7 @@ export const coachSlots = pgTable(
 );
 
 export const blockedDates = pgTable('blocked_dates', {
-  blockedDate: date('blocked_date').primaryKey(),
+  blockedDate: text('blocked_date').primaryKey(),
 });
 
 export const invoices = pgTable(
@@ -116,7 +116,7 @@ export const stageCompletions = pgTable('stage_completions', {
     .notNull()
     .references(() => students.id, { onDelete: 'cascade' }),
   stage: text('stage').notNull(),
-  completedDate: date('completed_date').notNull(),
+  completedDate: text('completed_date').notNull(),
   result: text('result').notNull(),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
 });

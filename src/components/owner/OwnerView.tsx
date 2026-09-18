@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
-import { IconBack, IconCheck, IconLock, IconPencil } from '@/components/icons';
+import { IconBack, IconCheck, IconLock, IconPencil, IconPlus, IconTrash } from '@/components/icons';
 import { WeekGrid } from '@/components/WeekGrid';
 import { useAction } from '@/components/Toast';
 import {
+  addStudentAction,
   blockDateAction,
+  deleteStudentAction,
   generateInvoicesAction,
   markInvoicePaidAction,
   setCapacityAction,
@@ -182,14 +184,153 @@ function Overview({ school }: { school: School }) {
 /* ---------- roster ---------- */
 
 function Roster({ school }: { school: School }) {
+  const { pending, run } = useAction();
+  const [adding, setAdding] = useState(false);
+  const [deleting, setDeleting] = useState<string | null>(null);
   const venueCount = new Set(school.students.map((s) => s.venue)).size;
+
+  const [form, setForm] = useState({
+    name: '',
+    level: STAGE_ORDER[0] as string,
+    parentName: '',
+    venue: Object.keys(POOL_PROFILES)[0],
+    rate: 80,
+    classId: school.classes[0]?.id ?? '',
+  });
+
+  const availableClasses = school.classes.filter((c) => {
+    const hasSpace = c.studentIds.length < c.capacity;
+    const levelOk = c.levels.includes(form.level);
+    const venueOk = c.venue === form.venue;
+    return hasSpace && levelOk && venueOk;
+  });
+
+  if (adding) {
+    return (
+      <>
+        <h1>Add student</h1>
+        <div className={`card${pending ? ' pending' : ''}`} style={{ maxWidth: 480 }}>
+          <label className="field">
+            <span>Student name</span>
+            <input
+              value={form.name}
+              onChange={(e) => setForm({ ...form, name: e.target.value })}
+              placeholder="e.g. Emma Tan"
+            />
+          </label>
+          <label className="field">
+            <span>Level</span>
+            <select value={form.level} onChange={(e) => setForm({ ...form, level: e.target.value })}>
+              {STAGE_ORDER.map((l) => (
+                <option key={l} value={l}>{l}</option>
+              ))}
+            </select>
+          </label>
+          <label className="field">
+            <span>Parent name</span>
+            <input
+              value={form.parentName}
+              onChange={(e) => setForm({ ...form, parentName: e.target.value })}
+              placeholder="e.g. Sarah Tan"
+              list="parents"
+            />
+            <datalist id="parents">
+              {parentNames(school).map((p) => (
+                <option key={p} value={p} />
+              ))}
+            </datalist>
+          </label>
+          <label className="field">
+            <span>Venue</span>
+            <select value={form.venue} onChange={(e) => setForm({ ...form, venue: e.target.value })}>
+              {Object.keys(POOL_PROFILES).map((name) => (
+                <option key={name} value={name}>{name}</option>
+              ))}
+            </select>
+          </label>
+          <label className="field">
+            <span>Rate ($/lesson)</span>
+            <input
+              type="number"
+              value={form.rate}
+              onChange={(e) => setForm({ ...form, rate: Number(e.target.value) })}
+            />
+          </label>
+          <label className="field">
+            <span>Class</span>
+            <select
+              value={form.classId}
+              onChange={(e) => setForm({ ...form, classId: e.target.value })}
+              disabled={availableClasses.length === 0}
+            >
+              {availableClasses.length === 0 ? (
+                <option>No suitable class available</option>
+              ) : (
+                availableClasses.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.label} ({c.venue}, {DOW_SHORT[c.dayOfWeek]} {c.timeLabel})
+                  </option>
+                ))
+              )}
+            </select>
+          </label>
+          <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+            <button className="btn btn-outline" onClick={() => setAdding(false)}>Cancel</button>
+            <button
+              className="btn btn-navy"
+              onClick={() => {
+                run(() => addStudentAction(form.name, form.level, form.parentName, form.venue, form.rate, form.classId));
+                setAdding(false);
+                setForm({ name: '', level: STAGE_ORDER[0], parentName: '', venue: Object.keys(POOL_PROFILES)[0], rate: 80, classId: school.classes[0]?.id ?? '' });
+              }}
+            >
+              Add student
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
+
+  if (deleting) {
+    const student = studentById(school, deleting);
+    return (
+      <>
+        <h1>Remove student</h1>
+        <div className={`card${pending ? ' pending' : ''}`} style={{ maxWidth: 420 }}>
+          <p style={{ fontSize: 14, lineHeight: 1.6 }}>
+            Remove <b>{student?.name}</b>? This also deletes their attendance records, make-up credits, and progress history.
+          </p>
+          <div style={{ display: 'flex', gap: 12, marginTop: 16 }}>
+            <button className="btn btn-outline" onClick={() => setDeleting(null)}>Cancel</button>
+            <button
+              className="btn"
+              style={{ background: 'var(--coral)', color: '#fff' }}
+              onClick={() => {
+                run(() => deleteStudentAction(deleting));
+                setDeleting(null);
+              }}
+            >
+              Remove {student?.name.split(' ')[0]}
+            </button>
+          </div>
+        </div>
+      </>
+    );
+  }
 
   return (
     <>
-      <h1>Roster</h1>
-      <div className="dash-sub">
-        {school.students.length} active students across {venueCount} venue
-        {venueCount === 1 ? '' : 's'}
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 }}>
+        <div>
+          <h1 style={{ marginBottom: 4 }}>Roster</h1>
+          <div className="dash-sub">
+            {school.students.length} active students across {venueCount} venue{venueCount === 1 ? '' : 's'}
+          </div>
+        </div>
+        <button className="btn btn-navy btn-sm" onClick={() => setAdding(true)}>
+          <IconPlus size={12} /> Add student
+        </button>
       </div>
       <div className="table-card">
         <table>
@@ -200,6 +341,7 @@ function Roster({ school }: { school: School }) {
               <th>Venue</th>
               <th>Parent</th>
               <th>Rate</th>
+              <th />
             </tr>
             {school.students.map((s) => (
               <tr key={s.id}>
@@ -208,6 +350,15 @@ function Roster({ school }: { school: School }) {
                 <td>{s.venue}</td>
                 <td>{s.parentName}</td>
                 <td>${s.rate}/lesson</td>
+                <td>
+                  <button
+                    className="btn btn-outline btn-sm"
+                    style={{ padding: 6, minWidth: 32, minHeight: 32 }}
+                    onClick={() => setDeleting(s.id)}
+                  >
+                    <IconTrash size={14} />
+                  </button>
+                </td>
               </tr>
             ))}
           </tbody>

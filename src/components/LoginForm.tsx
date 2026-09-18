@@ -1,6 +1,7 @@
 'use client';
 
-import { useActionState, useState } from 'react';
+import { useState, useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { loginAction } from '@/lib/actions';
 
 const DEMO_ACCOUNTS = [
@@ -10,9 +11,33 @@ const DEMO_ACCOUNTS = [
   ['Parent — Fiona', 'fiona@swimanager.test'],
 ];
 
+function SubmitButton({ asParent }: { asParent: boolean }) {
+  const { pending } = useFormStatus();
+  
+  return (
+    <button
+      className={`btn btn-coral btn-block${pending ? ' pending' : ''}`}
+      style={{ marginTop: 16 }}
+      type="submit"
+      disabled={pending}
+    >
+      {pending ? (
+        <>
+          <span className="spinner" />
+          Signing in…
+        </>
+      ) : asParent ? (
+        'Log in as parent'
+      ) : (
+        'Log in'
+      )}
+    </button>
+  );
+}
+
 export function LoginForm() {
   const [asParent, setAsParent] = useState(false);
-  const [state, formAction, pending] = useActionState(loginAction, null);
+  const [state, formAction] = useActionState(loginAction, null);
 
   return (
     <div className="login-wrap">
@@ -29,7 +54,7 @@ export function LoginForm() {
           <h2 className="login-mode">{asParent ? 'Parent login' : 'Staff login'}</h2>
           <p className="login-hint">
             {asParent
-              ? 'Your child’s progress, make-up credits and invoices.'
+              ? "Your child's progress, make-up credits and invoices."
               : 'Owner or instructor account.'}
           </p>
 
@@ -50,14 +75,7 @@ export function LoginForm() {
 
           {state?.error ? <div className="login-error">{state.error}</div> : null}
 
-          <button
-            className="btn btn-coral btn-block"
-            style={{ marginTop: 16 }}
-            type="submit"
-            disabled={pending}
-          >
-            {pending ? 'Signing in…' : asParent ? 'Log in as parent' : 'Log in'}
-          </button>
+          <SubmitButton asParent={asParent} />
         </form>
 
         <div className="login-switch">

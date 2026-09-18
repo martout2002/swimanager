@@ -17,32 +17,28 @@ import type { School } from './school';
 
 /** Everything the three views read. One round of queries, no per-component fetching. */
 export async function loadSchool(): Promise<School> {
-  const [
-    studentRows,
-    classRows,
-    attendanceRows,
-    creditRows,
-    bookingRows,
-    slotRows,
-    blockedRows,
-    invoiceRows,
-    completionRows,
-    historyRows,
-  ] = await Promise.all([
-    db.select().from(students),
-    db.select().from(classes),
-    db.select().from(attendance),
-    db.select().from(makeupCredits),
-    db.select().from(makeupBookings),
-    db.select().from(coachSlots),
-    db.select().from(blockedDates),
-    db.select().from(invoices),
-    db.select().from(stageCompletions).orderBy(stageCompletions.createdAt),
-    db
-      .select({ studentId: progressHistory.studentId, level: progressHistory.level })
-      .from(progressHistory)
-      .orderBy(desc(progressHistory.createdAt)),
-  ]);
+  let studentRows, classRows, attendanceRows, creditRows, bookingRows, slotRows, blockedRows, invoiceRows, completionRows, historyRows;
+  
+  try {
+    [studentRows, classRows, attendanceRows, creditRows, bookingRows, slotRows, blockedRows, invoiceRows, completionRows, historyRows] = await Promise.all([
+      db.select().from(students),
+      db.select().from(classes),
+      db.select().from(attendance),
+      db.select().from(makeupCredits),
+      db.select().from(makeupBookings),
+      db.select().from(coachSlots),
+      db.select().from(blockedDates),
+      db.select().from(invoices),
+      db.select().from(stageCompletions).orderBy(stageCompletions.createdAt),
+      db
+        .select({ studentId: progressHistory.studentId, level: progressHistory.level })
+        .from(progressHistory)
+        .orderBy(desc(progressHistory.createdAt)),
+    ]);
+  } catch (error) {
+    console.error('[loadSchool] Database query error:', error);
+    throw error;
+  }
 
   const undoTargets: Record<string, string> = {};
   for (const row of historyRows) {
