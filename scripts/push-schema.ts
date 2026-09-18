@@ -36,6 +36,7 @@ async function main() {
   const sql = postgres(url, { prepare: false, max: 1 });
 
   try {
+    await sql`SET statement_timeout = '60s'`;
     await sql.unsafe(ddl);
     console.log('Schema applied.');
   } catch (err) {

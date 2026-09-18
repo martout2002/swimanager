@@ -31,6 +31,7 @@ export const students = pgTable('students', {
   venue: text('venue').notNull(),
   rate: integer('rate').notNull(),
   progress: jsonb('progress').$type<StageTree>().notNull(),
+  coachId: uuid('coach_id').references(() => users.id, { onDelete: 'set null' }),
 });
 
 export const classes = pgTable('classes', {

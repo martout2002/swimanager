@@ -37,8 +37,8 @@ assert.equal(computeCreditStatus({ status: 'used', expiresDate: '2026-07-01' }),
 
 const school: School = {
   students: [
-    { id: 'a', name: 'A', level: 'Stage 1', parentName: 'P', venue: 'V', rate: 70, progress: blankTree(templateForLevel('Stage 1')) },
-    { id: 'b', name: 'B', level: 'Stage 1', parentName: 'P', venue: 'V', rate: 40, progress: blankTree(templateForLevel('Stage 1')) },
+    { id: 'a', name: 'A', level: 'Stage 1', parentName: 'P', venue: 'V', rate: 70, progress: blankTree(templateForLevel('Stage 1')), coachId: null },
+    { id: 'b', name: 'B', level: 'Stage 1', parentName: 'P', venue: 'V', rate: 40, progress: blankTree(templateForLevel('Stage 1')), coachId: null },
   ],
   classes: [],
   attendance: [
@@ -56,6 +56,7 @@ const school: School = {
   blockedDates: [],
   invoices: [],
   completions: [],
+  coaches: [],
   undoTargets: {},
 };
 

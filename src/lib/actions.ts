@@ -439,6 +439,7 @@ export async function addStudentAction(
   venue: string,
   rate: number,
   classId: string,
+  coachId: string | null,
 ): Promise<ActionResult> {
   await requireSession('owner');
 
@@ -446,6 +447,9 @@ export async function addStudentAction(
   const trimmedParent = parentName.trim();
   if (!trimmedName || !trimmedParent) {
     return { error: 'Student name and parent name are required.' };
+  }
+  if (!coachId) {
+    return { error: 'A coach must be assigned.' };
   }
 
   const existingUser = await db
@@ -477,6 +481,7 @@ export async function addStudentAction(
     venue,
     rate,
     progress,
+    coachId: coachId || null,
   });
 
   const classRow = await db.select().from(classes).where(eq(classes.id, classId)).limit(1);

@@ -31,6 +31,7 @@ import {
   invoicesGenerated,
   parentChildren,
   parentNames,
+  coachName,
   studentById,
   type School,
 } from '@/lib/school';
@@ -196,6 +197,7 @@ function Roster({ school }: { school: School }) {
     venue: Object.keys(POOL_PROFILES)[0],
     rate: 80,
     classId: school.classes[0]?.id ?? '',
+    coachId: school.coaches[0]?.id ?? '',
   });
 
   const availableClasses = school.classes.filter((c) => {
@@ -257,6 +259,18 @@ function Roster({ school }: { school: School }) {
             />
           </label>
           <label className="field">
+            <span>Coach</span>
+            <select value={form.coachId} onChange={(e) => setForm({ ...form, coachId: e.target.value })}>
+              {school.coaches.length === 0 ? (
+                <option value="">No coaches available</option>
+              ) : (
+                school.coaches.map((c) => (
+                  <option key={c.id} value={c.id}>{c.name}</option>
+                ))
+              )}
+            </select>
+          </label>
+          <label className="field">
             <span>Class</span>
             <select
               value={form.classId}
@@ -278,10 +292,11 @@ function Roster({ school }: { school: School }) {
             <button className="btn btn-outline" onClick={() => setAdding(false)}>Cancel</button>
             <button
               className="btn btn-navy"
+              disabled={!form.coachId || availableClasses.length === 0}
               onClick={() => {
-                run(() => addStudentAction(form.name, form.level, form.parentName, form.venue, form.rate, form.classId));
+                run(() => addStudentAction(form.name, form.level, form.parentName, form.venue, form.rate, form.classId, form.coachId || null));
                 setAdding(false);
-                setForm({ name: '', level: STAGE_ORDER[0], parentName: '', venue: Object.keys(POOL_PROFILES)[0], rate: 80, classId: school.classes[0]?.id ?? '' });
+                setForm({ name: '', level: STAGE_ORDER[0], parentName: '', venue: Object.keys(POOL_PROFILES)[0], rate: 80, classId: school.classes[0]?.id ?? '', coachId: school.coaches[0]?.id ?? '' });
               }}
             >
               Add student
@@ -340,6 +355,7 @@ function Roster({ school }: { school: School }) {
               <th>Level</th>
               <th>Venue</th>
               <th>Parent</th>
+              <th>Coach</th>
               <th>Rate</th>
               <th />
             </tr>
@@ -349,6 +365,7 @@ function Roster({ school }: { school: School }) {
                 <td>{s.level}</td>
                 <td>{s.venue}</td>
                 <td>{s.parentName}</td>
+                <td>{coachName(school, s.coachId) ?? <span style={{ color: 'var(--slate)' }}>—</span>}</td>
                 <td>${s.rate}/lesson</td>
                 <td>
                   <button

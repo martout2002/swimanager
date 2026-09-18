@@ -1,5 +1,5 @@
 import 'server-only';
-import { desc } from 'drizzle-orm';
+import { desc, eq } from 'drizzle-orm';
 import { db } from '@/db';
 import {
   attendance,
@@ -12,15 +12,16 @@ import {
   progressHistory,
   stageCompletions,
   students,
+  users,
 } from '@/db/schema';
 import type { School } from './school';
 
 /** Everything the three views read. One round of queries, no per-component fetching. */
 export async function loadSchool(): Promise<School> {
-  let studentRows, classRows, attendanceRows, creditRows, bookingRows, slotRows, blockedRows, invoiceRows, completionRows, historyRows;
+  let studentRows, classRows, attendanceRows, creditRows, bookingRows, slotRows, blockedRows, invoiceRows, completionRows, historyRows, coachRows;
   
   try {
-    [studentRows, classRows, attendanceRows, creditRows, bookingRows, slotRows, blockedRows, invoiceRows, completionRows, historyRows] = await Promise.all([
+    [studentRows, classRows, attendanceRows, creditRows, bookingRows, slotRows, blockedRows, invoiceRows, completionRows, historyRows, coachRows] = await Promise.all([
       db.select().from(students),
       db.select().from(classes),
       db.select().from(attendance),
@@ -34,6 +35,10 @@ export async function loadSchool(): Promise<School> {
         .select({ studentId: progressHistory.studentId, level: progressHistory.level })
         .from(progressHistory)
         .orderBy(desc(progressHistory.createdAt)),
+      db
+        .select({ id: users.id, name: users.name })
+        .from(users)
+        .where(eq(users.role, 'instructor')),
     ]);
   } catch (error) {
     console.error('[loadSchool] Database query error:', error);
@@ -55,6 +60,7 @@ export async function loadSchool(): Promise<School> {
         venue: s.venue,
         rate: s.rate,
         progress: s.progress,
+        coachId: s.coachId ?? null,
       }))
       .sort((a, b) => a.name.localeCompare(b.name)),
     classes: classRows.sort((a, b) => a.dayOfWeek - b.dayOfWeek || a.startHour - b.startHour),
@@ -79,6 +85,7 @@ export async function loadSchool(): Promise<School> {
       completedDate: c.completedDate,
       result: c.result,
     })),
+    coaches: coachRows.sort((a, b) => a.name.localeCompare(b.name)),
     undoTargets,
   };
 }

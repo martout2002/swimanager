@@ -16,6 +16,7 @@ export type Student = {
   venue: string;
   rate: number;
   progress: StageTree;
+  coachId: string | null;
 };
 
 export type ClassRow = {
@@ -57,6 +58,11 @@ export type Completion = {
   result: string;
 };
 
+export type Coach = {
+  id: string;
+  name: string;
+};
+
 export type School = {
   students: Student[];
   classes: ClassRow[];
@@ -67,6 +73,7 @@ export type School = {
   blockedDates: string[];
   invoices: Invoice[];
   completions: Completion[];
+  coaches: Coach[];
   /** studentId -> the level at the top of its undo stack, when there is one. */
   undoTargets: Record<string, string>;
 };
@@ -81,6 +88,11 @@ export function classById(school: School, id: string): ClassRow | undefined {
 
 export function parentNames(school: School): string[] {
   return [...new Set(school.students.map((s) => s.parentName))];
+}
+
+export function coachName(school: School, coachId: string | null): string | null {
+  if (!coachId) return null;
+  return school.coaches.find((c) => c.id === coachId)?.name ?? null;
 }
 
 export function parentChildren(school: School, parentName: string): Student[] {

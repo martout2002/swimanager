@@ -98,11 +98,15 @@ async function main() {
               parent_name = excluded.parent_name`;
     }
 
+    // Look up the instructor's ID so we can assign them as coach to every student.
+    const [instructor] = await sql`select id from users where role = 'instructor' limit 1`;
+    const coachId = instructor?.id ?? null;
+
     for (const s of STUDENTS) {
       await sql`
-        insert into students (id, name, level, parent_name, venue, rate, progress)
+        insert into students (id, name, level, parent_name, venue, rate, progress, coach_id)
         values (${s.id}, ${s.name}, ${s.level}, ${s.parentName}, ${s.venue}, ${s.rate},
-                ${JSON.stringify(PROGRESS[s.id])})`;
+                ${JSON.stringify(PROGRESS[s.id])}, ${coachId})`;
     }
 
     for (const c of CLASSES) {

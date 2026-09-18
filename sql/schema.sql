@@ -37,8 +37,10 @@ create table if not exists students (
   parent_name text not null,
   venue       text not null,
   rate        integer not null,
-  progress    jsonb not null
+  progress    jsonb not null,
+  coach_id    uuid references users(id) on delete set null
 );
+alter table students add column if not exists coach_id uuid references users(id) on delete set null;
 
 create table if not exists classes (
   id          text primary key,
